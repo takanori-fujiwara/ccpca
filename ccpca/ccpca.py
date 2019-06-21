@@ -31,7 +31,7 @@ class CCPCA(ccpca_cpp.CCPCA):
 
     >>> # get dimensionality reduction result with the best alpha
     >>> ccpca = CCPCA()
-    >>> ccpca.fit_with_best_alpha(X[y == 0], X[y != 0], var_thres_ratio=0.5)
+    >>> ccpca.fit_with_best_alpha(X[y == 0], X[y != 0], var_thres_ratio=0.5, max_log_alpha=0.5)
     >>> X_new = ccpca.transform(X)
 
     >>> # plot result
@@ -78,12 +78,13 @@ class CCPCA(ccpca_cpp.CCPCA):
     def fit_transform_with_best_alpha(self,
                                       K,
                                       R,
-                                      var_thres_ratio,
+                                      var_thres_ratio=0.5,
                                       parallel=True,
                                       n_alphas=40,
                                       max_log_alpha=3.0,
                                       keep_reports=False):
-        """TODO: some bug, seems fit_transform does not work properly
+        """TODO: some bug while binding C++ code with pybind11, fit_transform
+        deos not seem to work properly
 
         Find the best contrast parameter alpha first, fit using cPCA
         with the best alpha, and then transform a matrix concatenating K and R
@@ -95,8 +96,9 @@ class CCPCA(ccpca_cpp.CCPCA):
             A target cluster.
         R: array of array-like, n_groups x shape(n_samples, n_components)
             Background datasets.
-        var_thres_ratio: float
-            Ratio threshold of variance of A to keep.
+        var_thres_ratio: float, optional, (default=0.5)
+            Ratio threshold of variance of K to keep (the parameter gamma in
+            our paper).
         parallel: bool, optional, (default=True)
             If True, multithread implemented in C++ will be used for
             calculation.
@@ -104,6 +106,17 @@ class CCPCA(ccpca_cpp.CCPCA):
             A number of alphas to check to find the best one.
         max_log_alpha: float, optional, (default=3.0)
             10.0 ** max_log_alpha is the maximum value of alpha will be used.
+            Even though this default parameter (i.e., 3.0) follows the original
+            cPCA by [Abid and Zhang et al., 2018], you may want to set a much
+            smaller value based on the dataset (e.g., around 0.5 or 1.0 works
+            well from our experience).
+        keep_reports: bool, optional, (default=False)
+            If True, while automatic alpha selection, reports are recorded. The
+            reports include "alpha", "discrepancy score", "variance score",
+            "1D projection of K", "1D projection of R", and "cPC loadings".
+            These reports can be obtained via get_reports() method.
+            Use parallel=False togerther. Currently, this function does not
+            support when running in parallel.
         Returns
         -------
         None
@@ -115,7 +128,7 @@ class CCPCA(ccpca_cpp.CCPCA):
     def fit_with_best_alpha(self,
                             K,
                             R,
-                            var_thres_ratio,
+                            var_thres_ratio=0.5,
                             parallel=True,
                             n_alphas=40,
                             max_log_alpha=3.0,
@@ -130,8 +143,9 @@ class CCPCA(ccpca_cpp.CCPCA):
             A target cluster.
         R: array of array-like, n_groups x shape(n_samples, n_components)
             Background datasets.
-        var_thres_ratio: float
-            Ratio threshold of variance of A to keep.
+        var_thres_ratio: float, optional, (default=0.5)
+            Ratio threshold of variance of K to keep (the parameter gamma in
+            our paper).
         parallel: bool, optional, (default=True)
             If True, multithread implemented in C++ will be used for
             calculation.
@@ -139,6 +153,17 @@ class CCPCA(ccpca_cpp.CCPCA):
             A number of alphas to check to find the best one.
         max_log_alpha: float, optional, (default=3.0)
             10.0 ** max_log_alpha is the maximum value of alpha will be used.
+            Even though this default parameter (i.e., 3.0) follows the original
+            cPCA by [Abid and Zhang et al., 2018], you may want to set a much
+            smaller value based on the dataset (e.g., 0.5 or 1.0 works well
+            from our experience).
+        keep_reports: bool, optional, (default=False)
+            If True, while automatic alpha selection, reports are recorded. The
+            reports include "alpha", "discrepancy score", "variance score",
+            "1D projection of K", "1D projection of R", and "cPC loadings".
+            These reports can be obtained via get_reports() method.
+            Use parallel=False togerther. Currently, this function does not
+            support when running in parallel.
         Returns
         -------
         None
@@ -149,7 +174,7 @@ class CCPCA(ccpca_cpp.CCPCA):
     def best_alpha(self,
                    K,
                    R,
-                   var_thres_ratio,
+                   var_thres_ratio=0.5,
                    parallel=True,
                    n_alphas=40,
                    max_log_alpha=3.0,
@@ -166,8 +191,9 @@ class CCPCA(ccpca_cpp.CCPCA):
             A target cluster.
         R: array of array-like, n_groups x shape(n_samples, n_components)
             Background datasets.
-        var_thres_ratio: float
-            Ratio threshold of variance of A to keep.
+        var_thres_ratio: float, optional, (default=0.5)
+            Ratio threshold of variance of K to keep (the parameter gamma in
+            our paper).
         parallel: bool, optional, (default=True)
             If True, multithread implemented in C++ will be used for
             calculation.
@@ -175,6 +201,17 @@ class CCPCA(ccpca_cpp.CCPCA):
             A number of alphas to check to find the best one.
         max_log_alpha: float, optional, (default=3.0)
             10.0 ** max_log_alpha is the maximum value of alpha will be used.
+            Even though this default parameter (i.e., 3.0) follows the original
+            cPCA by [Abid and Zhang et al., 2018], you may want to set a much
+            smaller value based on the dataset (e.g., 0.5 or 1.0 works well
+            from our experience).
+        keep_reports: bool, optional, (default=False)
+            If True, while automatic alpha selection, reports are recorded. The
+            reports include "alpha", "discrepancy score", "variance score",
+            "1D projection of K", "1D projection of R", and "cPC loadings".
+            These reports can be obtained via get_reports() method.
+            Use parallel=False togerther. Currently, this function does not
+            support when running in parallel.
         Returns
         -------
         best_alpha: float
@@ -236,4 +273,15 @@ class CCPCA(ccpca_cpp.CCPCA):
         return super().get_best_alpha()
 
     def get_reports(self):
+        """Returns the reports kept while automatic selection of alpha. To get
+        reports, you need to set keep_reports=True in the corresponding method.
+        Parameters
+        ----------
+        None
+        -------
+        reports: tuple (float, float, float, array-like(n_samples, 1),
+            array-like(n_samples, 1), array-like(n_features, 1).
+            The order of tuple is "discrepancy score", "variance score",
+            "1D projection of K", "1D projection of R", and "cPC loadings".
+        """
         return super().get_reports()

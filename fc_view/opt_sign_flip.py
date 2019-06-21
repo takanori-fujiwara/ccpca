@@ -1,12 +1,26 @@
 class OptSignFlip():
     """
+    The optimal sign flipping introduced in [Fujiwara et al., 2019].
+    Parameters
+    ----------
+    None
+    Attributes
+    ----------
+    None
+    Examples
+    --------
+    Please refer to sample.ipynb (jupyter notebook).
+    References
+    ----------
+    T. Fujiwara, O.-H. Kwon, and K.-L. Ma, Supporting Analysis of Dimensionality
+    Reduction Results with Contrastive Learning, arXiv preprint, 2019.
     """
 
     def __init__(self):
         None
 
     @classmethod
-    def opt_sym_mat_sign(cls, X, set_diag_zero=True):
+    def _opt_sym_mat_sign(cls, X, set_diag_zero=True):
         import numpy as np
 
         if set_diag_zero:
@@ -32,6 +46,21 @@ class OptSignFlip():
 
     @classmethod
     def opt_sign_flip(cls, first_cpc_mat, feat_contrib_mat=None):
+        """
+        Apply the optimal sign flipping to the first cPC matrix and feature
+        contributions' matrix.
+        Parameters
+        ----------
+        first_cpc_mat: array, shape(n_features, n_clusters)
+            The first cPC for each cluster.
+        feat_contrib_mat: array, shape(n_features, n_clusters), optional
+            The features' contributions for each cluster.
+        Returns
+        -------
+        fcluster : ndarray
+            An array of length n_columns. T[i] is the flat cluster number to
+            which original observation i belongs.
+        """
         import numpy as np
         # generate cosine similarity matrix
         dot_prod_mat = first_cpc_mat.transpose().dot(first_cpc_mat)
@@ -41,7 +70,7 @@ class OptSignFlip():
         cos_mat = dot_prod_mat / norm_mat
 
         # minimize negative elements by sign flipping
-        flips = cls.opt_sym_mat_sign(cos_mat)
+        flips = cls._opt_sym_mat_sign(cos_mat)
 
         # perform flip
         for i, flip in enumerate(flips):

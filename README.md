@@ -52,7 +52,7 @@ Setup
 
     `pip3 install matplotlib`
 
-#### Linux (tested on Ubuntu 18.0.4 LTS)
+#### Linux (will be tested on Ubuntu 18.0.4 LTS. Not tested yet)
 * Install libraries
 
     `sudo apt update`
@@ -65,21 +65,18 @@ Setup
 
     `pip3 install numpy`
 
-* Build (TODO)
+* Move to 'ccpca' directory then compile with:
 
-<!-- * Move to 'inc_pca' directory then compile with:
+    ``c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -I/usr/include/eigen3/ -fPIC `python3 -m pybind11 --includes` cpca.cpp cpca_wrap.cpp -o cpca_cpp`python3-config --extension-suffix` ``
 
-    ``c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -I/usr/include/eigen3/ -fPIC `python3 -m pybind11 --includes` inc_pca.cpp inc_pca_wrap.cpp -o inc_pca_cpp`python3-config --extension-suffix` ``
+    ``c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -I/usr/include/eigen3/ -fPIC `python3 -m pybind11 --includes` cpca.cpp cpca_wrap.cpp ccpca.cpp ccpca_wrap.cpp -o ccpca_cpp`python3-config --extension-suffix` ``
 
-* This generates a shared library, "inc_pca_cpp.xxxx.so" (e.g., inc_pca_cpp.cpython-37m-x86_64-linux-gnu.so).
+* This generates a shared library, "cpca_cpp.xxxx.so" and "ccpca_cpp.xxxx.so" (e.g., ccpca_cpp.cpython-37m-x86_64-linux-gnu.so).
 
-* If you want to run sample.py in this directory. You need to install additional libraries.
-
-    `sudo apt install python3-tk`
+* If you want to run samples in this directory. You need to install additional libraries.
 
     `pip3 install matplotlib`
 
-    `pip3 install sklearn` -->
 
 ******
 

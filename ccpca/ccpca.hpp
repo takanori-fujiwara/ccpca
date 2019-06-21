@@ -12,19 +12,19 @@ public:
   CCPCA(Eigen::Index const nComponents = 2, bool const standardize = true);
   Eigen::MatrixXf fitTransformWithBestAlpha(Eigen::MatrixXf const &K,
                                             Eigen::MatrixXf const &R,
-                                            float const varThresRatio,
+                                            float const varThresRatio = 0.5f,
                                             bool parallel = true,
                                             unsigned int const nAlphas = 40,
                                             float const maxLogAlpha = 3.0f,
                                             bool const keepReports = false);
   void fitWithBestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
-                        float const varThresRatio, bool parallel = true,
+                        float const varThresRatio = 0.5f, bool parallel = true,
                         unsigned int const nAlphas = 40,
                         float const maxLogAlpha = 3.0f,
                         bool const keepReports = false);
   Eigen::MatrixXf transform(Eigen::MatrixXf const &X);
   float bestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
-                  float const varThresRatio, bool parallel = true,
+                  float const varThresRatio = 0.5f, bool parallel = true,
                   unsigned int const nAlphas = 40,
                   float const maxLogAlpha = 3.0f,
                   bool const keepReports = false);
@@ -48,7 +48,7 @@ private:
   Eigen::VectorXf featContribs_;
 
   // this tuple is used because pybind11 cannot handle structure well
-  // the order is alpha, dist, var, projA, projB, loadings
+  // the order is alpha, discrepancy score, var, projK, projR, loadings
   std::vector<std::tuple<float, float, float, Eigen::VectorXf, Eigen::VectorXf,
                          Eigen::VectorXf>>
       reports_;

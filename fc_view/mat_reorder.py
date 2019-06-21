@@ -5,8 +5,8 @@ from scipy.spatial.distance import pdist
 
 
 class MatReorder():
-    """Heatmap reordering and aggregation by hierarchical clustering with
-    optimal-leaf-ordering.
+    """Heatmap reordering and aggregation by hierarchical clustering using
+    the complete linkage algorithm with optimal-leaf-ordering.
     Parameters
     ----------
     None
@@ -62,6 +62,8 @@ class MatReorder():
     -----
     References
     ----------
+    Z. Bar-Joseph, D. K. Gifford, and T. S. Jaakkola. Fast optimal leaf ordering
+    for hierarchical clustering.Bioinformatics, 17(1):S22–S29, 2001
     """
 
     def __init__(self):
