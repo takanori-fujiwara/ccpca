@@ -29,6 +29,10 @@ public:
                   float const maxLogAlpha = 3.0f,
                   bool const keepReports = false);
   Eigen::VectorXf getFeatContribs() { return featContribs_; };
+  Eigen::VectorXf getScaledFeatContribs() {
+    float absMax = featContribs_.array().abs().maxCoeff();
+    return featContribs_ / absMax;
+  };
   Eigen::VectorXf getFirstComponent() { return cpca_.getComponent(0); };
   float getBestAlpha() { return bestAlpha_; };
   std::vector<std::tuple<float, float, float, Eigen::VectorXf, Eigen::VectorXf,

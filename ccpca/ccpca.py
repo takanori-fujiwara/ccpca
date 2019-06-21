@@ -196,6 +196,22 @@ class CCPCA(ccpca_cpp.CCPCA):
         """
         return super().get_feat_contribs()
 
+    def get_scaled_feat_contribs(self):
+        """Returns scaled feature contributions from current cPCA result.
+        Scaled feature contributions are in the range from -1 to 1 by dividing
+        each feature contribution by the maximum absolute value of the FCs
+        (e.g., the original range from -0.1 to 0.5 will be changed to the range
+        from -0.2 to 1.0)
+        Parameters
+        ----------
+        None
+        Returns
+        -------
+        feat_contribs: array-like, shape(n_features, 1)
+            Feature contributions.
+        """
+        return super().get_scaled_feat_contribs()
+
     def get_first_component(self):
         """Returns the firsrt PC from current cPCA result.
         Parameters

@@ -15,7 +15,8 @@ PYBIND11_MODULE(ccpca_cpp, m) {
       .def("fit_with_best_alpha", &CCPCA::fitWithBestAlpha)
       .def("transform", &CCPCA::transform)
       .def("best_alpha", &CCPCA::bestAlpha)
-      .def("get_dim_contributions", &CCPCA::getFeatContribs)
+      .def("get_feat_contribs", &CCPCA::getFeatContribs)
+      .def("get_scaled_feat_contribs", &CCPCA::getScaledFeatContribs)
       .def("get_first_component", &CCPCA::getFirstComponent)
       .def("get_best_alpha", &CCPCA::getBestAlpha)
       .def("get_reports", &CCPCA::getReports);
