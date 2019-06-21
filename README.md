@@ -28,7 +28,10 @@ Requirements
 Setup
 -----
 #### Mac OS with Homebrew
-* Install libraries
+
+##### 1) Installation of ccPCA
+
+* Install required libraries
 
     `brew install python3`
 
@@ -38,9 +41,9 @@ Setup
 
     `pip3 install numpy`
 
-* Build source codes in "ccpca" directory with cmake
+* Move to "ccpca" directory
 
-    `mv /path/to/directory-of-CmakeLists.txt`
+* Build source codes with cmake
 
     `cmake .`
 
@@ -48,11 +51,24 @@ Setup
 
 * This generates a shared library, "cpca_cpp.xxxx.so" and "ccpca_cpp.xxxx.so" (e.g., ccpca_cpp.cpython-37m-darwin.so).
 
-* If you want to run samples in this directory. You need to install additional libraries.
+* Install the modules with pip3.
 
-    `pip3 install matplotlib`
+    `pip3 install .`
+
+##### 2) Installation of fc-view
+
+* If you want to use the algorithms for scalable visualization of features' contributions, please follow the next steps.
+
+* Move to "fc_view" directory
+
+* Install the modules with pip3
+
+    `pip3 install . `
 
 #### Linux (will be tested on Ubuntu 18.0.4 LTS. Not tested yet)
+
+##### 1) Installation of ccPCA
+
 * Install libraries
 
     `sudo apt update`
@@ -65,7 +81,9 @@ Setup
 
     `pip3 install numpy`
 
-* Move to 'ccpca' directory then compile with:
+* Move to "ccpca" directory
+
+* Build source codes with:
 
     ``c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -I/usr/include/eigen3/ -fPIC `python3 -m pybind11 --includes` cpca.cpp cpca_wrap.cpp -o cpca_cpp`python3-config --extension-suffix` ``
 
@@ -73,24 +91,29 @@ Setup
 
 * This generates a shared library, "cpca_cpp.xxxx.so" and "ccpca_cpp.xxxx.so" (e.g., ccpca_cpp.cpython-37m-x86_64-linux-gnu.so).
 
-* If you want to run samples in this directory. You need to install additional libraries.
+* Install the modules with pip3.
 
-    `pip3 install matplotlib`
+    `pip3 install .`
 
+##### 2) Installation of fc-view
+
+* If you want to use the algorithms for scalable visualization of features' contributions, please follow the next steps.
+
+* Move to "fc_view" directory
+
+* Install the modules with pip3
+
+    `pip3 install . `
 
 ******
 
 Usage
 -----
 * With Python3
-    * Place cpca_cpp.xxxx.so, cpca.py, ccpca_cpp.xxxx.so, ccpca.py in the same directory.
-
-    * Import "ccpca" from python. See sample.ipynb for examples.
+    * Import installed modules from python (e.g., `from ccpca import CCPCA`). See sample.ipynb for examples.
 
 * With C++
-    * Include ccpca.hpp in C++ code with ccpca.cpp.
-
-* Note: Also, it is possible to use cPCA without ccPCA. If you want, import "cpca" from python or include cpca.hpp in C++ code.
+    * Include header files (e.g., ccpca.hpp) in C++ code with cpp files (e.g., ccpca.cpp).
 
 ******
 

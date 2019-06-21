@@ -36,7 +36,7 @@ plt.title('cPCA of IRIS dataset (alpha=2.15)')
 plt.show()
 
 ccpca = CCPCA()
-ccpca.fit_with_best_alpha(X[y == 0], X[y != 0], var_thres_ratio=0.5)
+ccpca.fit_with_best_alpha(X[y == 0], X[y != 0], var_thres_ratio=0.5, max_log_alpha=0.5)
 X_r2 = ccpca.transform(X)
 
 plt.figure()
