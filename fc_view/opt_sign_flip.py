@@ -35,7 +35,7 @@ class OptSignFlip():
         i = 0
         flips = [False] * n
         while np.any(col_sum < 0) and i < n:
-            large_neg_val_idx = np.argsort(col_sum)[0]
+            large_neg_val_idx = np.array(np.argsort(col_sum)).flatten()[0]
             X[large_neg_val_idx, :] *= -1
             X[:, large_neg_val_idx] *= -1
             flips[large_neg_val_idx] = not flips[large_neg_val_idx]
