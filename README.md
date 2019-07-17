@@ -1,17 +1,18 @@
-## ccPCA: PCA for contrasting clusters - C++ Library and Python Module
+## ccPCA: contrasting clusters in PCA - C++ Library and Python Module
 
 About
 -----
-* ccPCA and feature contribution visualization from: ***Supporting Analysis of Dimensionality Reduction Results with Contrastive Learning***    
-Takanori Fujiwara, Oh-Hyun Kwon, and Kwan-Liu Ma   
-arXiv preprint, 2019 (also currently conditionally accepted to IEEE VAST 2019).
+* ccPCA and feature contribution visualization from: ***Supporting Analysis of Dimensionality Reduction Results with Contrastive Learning***.
+Takanori Fujiwara, Oh-Hyun Kwon, and Kwan-Liu Ma. To appear in IEEE Transactions on Visualization and Computer Graphics and IEEE VIS 2019 (VAST).
+
+* Demonstration of a system using ccPCA: http://kwonoh.net/ccpca/
 
 * Features
   * Fast C++ implementation with Eigen3 of Contrastive PCA (cPCA) from [Abid and Zhang et al., 2018].
     * A. Abid, M. J. Zhang, V. K. Bagaria, and J. Zou. Exploring patterns enriched in a dataset with contrastive principal component analysis, Nature Communicationsvolume,Vol. 9, No. 1, pp. 2134, 2018.
     * https://github.com/abidlabs/contrastive
 
-  * An extended version of cPCA (ccPCA) for contrastive clusters.
+  * An extended version of cPCA (ccPCA) for contrasting clusters.
 
   * Algorithms for generating an effective, scalable feature contribution visualization, including optimal sign flipping of (c)PCA, matrix reordering, and aggregation.
 
@@ -120,5 +121,4 @@ Usage
 ## How to Cite
 Please, cite:    
 Takanori Fujiwara, Oh-Hyun Kwon, and Kwan-Liu Ma, "Supporting Analysis of Dimensionality Reduction Results with Contrastive Learning".
-arXiv preprint, 2019.
-(We prefer citing the version for IEEE VAST 2019 once it is accepted).
+To appear in IEEE Transactions on Visualization and Computer Graphics and IEEE VIS 2019 (VAST).
