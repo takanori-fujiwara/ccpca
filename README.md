@@ -3,7 +3,8 @@
 About
 -----
 * ccPCA and feature contribution visualization from: ***Supporting Analysis of Dimensionality Reduction Results with Contrastive Learning***.
-Takanori Fujiwara, Oh-Hyun Kwon, and Kwan-Liu Ma. To appear in IEEE Transactions on Visualization and Computer Graphics and IEEE VIS 2019 (VAST).
+Takanori Fujiwara, Oh-Hyun Kwon, and Kwan-Liu Ma.
+To appear in IEEE Transactions on Visualization and Computer Graphics and IEEE VIS 2019 (VAST).
 
 * Demonstration of a system using ccPCA: http://kwonoh.net/ccpca/
 
