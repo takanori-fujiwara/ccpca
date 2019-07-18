@@ -18,6 +18,10 @@ PYBIND11_MODULE(ccpca_cpp, m) {
       .def("best_alpha", &CCPCA::bestAlpha)
       .def("get_feat_contribs", &CCPCA::getFeatContribs)
       .def("get_scaled_feat_contribs", &CCPCA::getScaledFeatContribs)
+      .def("get_loadings", &CCPCA::getLoadings)
+      .def("get_loading", &CCPCA::getLoading)
+      .def("get_components", &CCPCA::getComponents)
+      .def("get_component", &CCPCA::getComponent)
       .def("get_first_component", &CCPCA::getFirstComponent)
       .def("get_best_alpha", &CCPCA::getBestAlpha)
       .def("get_reports", &CCPCA::getReports);

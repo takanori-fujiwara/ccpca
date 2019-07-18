@@ -278,6 +278,60 @@ class CCPCA(ccpca_cpp.CCPCA):
         """
         return super().get_scaled_feat_contribs()
 
+    def get_loadings(self):
+        """Returns current principal component loadings.
+
+        Parameters
+        ----------
+        None.
+        Returns
+        -------
+        components: array-like, shape(n_features, n_components)
+            Contrastive principal component loadings.
+        """
+        return super().get_loadings()
+
+    def get_loading(self, index):
+        """Returns i-th principal component loading.
+
+        Parameters
+        ----------
+        index: int
+            Indicates i-th principal component loading.
+        Returns
+        -------
+        component: array-like, shape(1, n_components)
+            i-th principal component loading.
+        """
+        return super().get_loading(index)
+
+    def get_components(self):
+        """Returns current components.
+
+        Parameters
+        ----------
+        None.
+        Returns
+        -------
+        components: array-like, shape(n_features, n_components)
+            Contrastive principal components.
+        """
+        return super().get_components()
+
+    def get_component(self, index):
+        """Returns i-th component.
+
+        Parameters
+        ----------
+        index: int
+            Indicates i-th component.
+        Returns
+        -------
+        component: array-like, shape(1, n_components)
+            i-th contrastive principal component.
+        """
+        return super().get_component(index)
+
     def get_first_component(self):
         """Returns the firsrt PC from current cPCA result.
         Parameters

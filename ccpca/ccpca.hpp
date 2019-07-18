@@ -7,7 +7,7 @@
 #include <tuple>
 #include <vector>
 
-class CCPCA {
+class CCPCA : public CPCA {
 public:
   CCPCA(Eigen::Index const nComponents = 2, bool const standardize = true);
 
@@ -36,12 +36,21 @@ public:
                   float const maxLogAlpha = 3.0f,
                   bool const keepReports = false);
 
+  // first loading is the same with featContribs_
   Eigen::VectorXf getFeatContribs() { return featContribs_; };
   Eigen::VectorXf getScaledFeatContribs() {
     float absMax = featContribs_.array().abs().maxCoeff();
     return featContribs_ / absMax;
   };
-  Eigen::VectorXf getFirstComponent() { return cpca_.getComponent(0); };
+  Eigen::MatrixXf getLoadings() { return cpca_.getLoadings(); };
+  Eigen::VectorXf getLoading(Eigen::Index const index) {
+    return cpca_.getLoading(index);
+  };
+  Eigen::MatrixXf getComponents() { return cpca_.getComponents(); };
+  Eigen::VectorXf getComponent(Eigen::Index const index) {
+    return cpca_.getComponent(index);
+  };
+  Eigen::VectorXf getFirstComponent() { return getComponent(0); };
   float getBestAlpha() { return bestAlpha_; };
   std::vector<std::tuple<float, float, float, Eigen::VectorXf, Eigen::VectorXf,
                          Eigen::VectorXf>>
