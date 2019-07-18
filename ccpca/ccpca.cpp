@@ -168,20 +168,23 @@ std::pair<float, float> CCPCA::scaledVar(Eigen::VectorXf const &a,
                                          Eigen::VectorXf const &b) {
   float minVal = std::min(a.minCoeff(), b.minCoeff());
   float maxVal = std::max(a.maxCoeff(), b.maxCoeff());
+  float range = std::max(maxVal - minVal, std::numeric_limits<float>::min());
 
-  float varA =
-      ((a.array() - a.mean()) / (maxVal - minVal)).array().square().mean();
-  float varB =
-      ((b.array() - b.mean()) / (maxVal - minVal)).array().square().mean();
+  float varA = ((a.array() - a.mean()) / range).array().square().mean();
+  float varB = ((b.array() - b.mean()) / range).array().square().mean();
 
   return {varA, varB};
 }
 
 float CCPCA::binWidthScott(Eigen::VectorXf const &vals) {
   auto n = vals.size();
-  float sd =
-      std::sqrt((vals.array() - vals.mean()).square().sum() / float(n - 1));
-  float binWidth = 3.5 * sd / std::pow(float(n), 1.0 / 3.0);
+  float sd = 0.0f;
+  if (n > 1) {
+    sd = std::sqrt((vals.array() - vals.mean()).square().sum() / float(n - 1));
+  }
+  float denom = std::max(std::pow(float(n), 1.0f / 3.0f),
+                         std::numeric_limits<float>::min());
+  float binWidth = 3.5f * sd / denom;
 
   return binWidth;
 }
@@ -189,7 +192,7 @@ float CCPCA::binWidthScott(Eigen::VectorXf const &vals) {
 int CCPCA::histIntersect(Eigen::VectorXf const &a, Eigen::VectorXf const &b) {
   float minVal = std::min(a.minCoeff(), b.minCoeff());
   float maxVal = std::max(a.maxCoeff(), b.maxCoeff());
-  float range = maxVal - minVal;
+  float range = std::max(maxVal - minVal, std::numeric_limits<float>::min());
   auto nA = a.size();
   auto nB = b.size();
 
@@ -198,7 +201,8 @@ int CCPCA::histIntersect(Eigen::VectorXf const &a, Eigen::VectorXf const &b) {
   Eigen::VectorXf tmpAB(nA + nB);
   tmpAB << tmpA, tmpB;
 
-  float binW = binWidthScott(tmpAB);
+  float binW =
+      std::max(binWidthScott(tmpAB), std::numeric_limits<float>::min());
   unsigned int nBins = static_cast<unsigned int>(1.0f / binW) + 1;
 
   std::vector<int> countsA(nBins, 0);
