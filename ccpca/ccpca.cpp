@@ -15,13 +15,28 @@ CCPCA::CCPCA(Eigen::Index const nComponents, bool const standardize)
   concatMat_.resize(0, 0);
 }
 
-Eigen::MatrixXf CCPCA::fitTransformWithBestAlpha(
-    Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
-    float const varThresRatio, bool parallel, unsigned int const nAlphas,
-    float const maxLogAlpha, bool const keepReports) {
-  fitWithBestAlpha(K, R, varThresRatio, parallel, nAlphas, maxLogAlpha,
-                   keepReports);
+Eigen::MatrixXf
+CCPCA::fitTransform(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
+                    bool const autoAlphaSelection, float const alpha,
+                    float const varThresRatio, bool parallel,
+                    unsigned int const nAlphas, float const maxLogAlpha,
+                    bool const keepReports) {
+  fit(K, R, autoAlphaSelection, alpha, varThresRatio, parallel, nAlphas,
+      maxLogAlpha, keepReports);
   return cpca_.transform(concatMat_);
+}
+
+void CCPCA::fit(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
+                bool const autoAlphaSelection, float const alpha,
+                float const varThresRatio, bool parallel,
+                unsigned int const nAlphas, float const maxLogAlpha,
+                bool const keepReports) {
+  if (autoAlphaSelection) {
+    fitWithBestAlpha(K, R, varThresRatio, parallel, nAlphas, maxLogAlpha,
+                     keepReports);
+  } else {
+    fitWithManualAlpha(K, R, alpha);
+  }
 }
 
 void CCPCA::fitWithBestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
@@ -33,6 +48,23 @@ void CCPCA::fitWithBestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
   featContribs_ = cpca_.getLoading(0);
 }
 
+void CCPCA::fitWithManualAlpha(Eigen::MatrixXf const &K,
+                               Eigen::MatrixXf const &R, float const alpha) {
+  Eigen::Index nSamplesK = K.rows();
+  Eigen::Index nSamplesR = R.rows();
+
+  if (K.cols() != R.cols()) {
+    std::cerr << "# of rows of K and all matrix in R must be the same."
+              << std::endl;
+  }
+
+  Eigen::MatrixXf concatMat_(nSamplesK + nSamplesR, K.cols());
+  concatMat_ << K, R;
+
+  cpca_.fit(concatMat_, R, alpha);
+  featContribs_ = cpca_.getLoading(0);
+}
+
 Eigen::MatrixXf CCPCA::transform(Eigen::MatrixXf const &X) {
   return cpca_.transform(X);
 }
@@ -41,15 +73,15 @@ float CCPCA::bestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
                        float const varThresRatio, bool parallel,
                        unsigned int const nAlphas, float const maxLogAlpha,
                        bool const keepReports) {
-  Eigen::Index nSamplesA = K.rows();
-  Eigen::Index nSamplesB = R.rows();
+  Eigen::Index nSamplesK = K.rows();
+  Eigen::Index nSamplesR = R.rows();
 
   if (K.cols() != R.cols()) {
-    std::cerr << "# of rows of A and all matrix in B must be the same."
+    std::cerr << "# of rows of K and all matrix in R must be the same."
               << std::endl;
   }
 
-  Eigen::MatrixXf concatMat_(nSamplesA + nSamplesB, K.cols());
+  Eigen::MatrixXf concatMat_(nSamplesK + nSamplesR, K.cols());
   concatMat_ << K, R;
 
   cpca_.fit(concatMat_, R, 0.0f);
@@ -61,6 +93,7 @@ float CCPCA::bestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
   auto baseVarK = scaledVar(bestProjK, bestProjR).first;
   auto bestDiscrepancy = -histIntersect(bestProjK, bestProjR);
 
+  reports_.clear();
   if (keepReports) {
     reports_.push_back(std::make_tuple(0.0, float(bestDiscrepancy), baseVarK,
                                        bestProjK, bestProjR,

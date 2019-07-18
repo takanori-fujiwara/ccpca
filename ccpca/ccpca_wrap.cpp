@@ -11,8 +11,9 @@ PYBIND11_MODULE(ccpca_cpp, m) {
   m.doc() = "ccPCA wrapped with pybind11";
   py::class_<CCPCA>(m, "CCPCA")
       .def(py::init<Eigen::Index const, bool const>())
-      .def("fit_transform_with_best_alpha", &CCPCA::fitTransformWithBestAlpha)
-      .def("fit_with_best_alpha", &CCPCA::fitWithBestAlpha)
+      // fitTransform has some bug probably related to using pybind11
+      // .def("fit_transform", &CCPCA::fitTransform)
+      .def("fit", &CCPCA::fit)
       .def("transform", &CCPCA::transform)
       .def("best_alpha", &CCPCA::bestAlpha)
       .def("get_feat_contribs", &CCPCA::getFeatContribs)

@@ -10,24 +10,32 @@
 class CCPCA {
 public:
   CCPCA(Eigen::Index const nComponents = 2, bool const standardize = true);
-  Eigen::MatrixXf fitTransformWithBestAlpha(Eigen::MatrixXf const &K,
-                                            Eigen::MatrixXf const &R,
-                                            float const varThresRatio = 0.5f,
-                                            bool parallel = true,
-                                            unsigned int const nAlphas = 40,
-                                            float const maxLogAlpha = 3.0f,
-                                            bool const keepReports = false);
+
+  Eigen::MatrixXf
+  fitTransform(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
+               bool const autoAlphaSelection = true, float const alpha = 0.0f,
+               float const varThresRatio = 0.5f, bool parallel = true,
+               unsigned int const nAlphas = 40, float const maxLogAlpha = 3.0f,
+               bool const keepReports = false);
+  void fit(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
+           bool const autoAlphaSelection = true, float const alpha = 0.0f,
+           float const varThresRatio = 0.5f, bool parallel = true,
+           unsigned int const nAlphas = 40, float const maxLogAlpha = 3.0f,
+           bool const keepReports = false);
   void fitWithBestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
                         float const varThresRatio = 0.5f, bool parallel = true,
                         unsigned int const nAlphas = 40,
                         float const maxLogAlpha = 3.0f,
                         bool const keepReports = false);
+  void fitWithManualAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
+                          float const alpha = 0.0f);
   Eigen::MatrixXf transform(Eigen::MatrixXf const &X);
   float bestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
                   float const varThresRatio = 0.5f, bool parallel = true,
                   unsigned int const nAlphas = 40,
                   float const maxLogAlpha = 3.0f,
                   bool const keepReports = false);
+
   Eigen::VectorXf getFeatContribs() { return featContribs_; };
   Eigen::VectorXf getScaledFeatContribs() {
     float absMax = featContribs_.array().abs().maxCoeff();
