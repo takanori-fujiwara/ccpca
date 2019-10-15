@@ -73,7 +73,7 @@ Setup
 
     `pip3 install . `
 
-#### Linux (will be tested on Ubuntu 18.0.4 LTS. Not tested yet)
+#### Linux (tested on Ubuntu 19.0.4 LTS)
 
 ##### 1) Installation of ccPCA
 
