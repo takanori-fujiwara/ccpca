@@ -4,7 +4,8 @@ About
 -----
 * ccPCA and feature contribution visualization from: ***Supporting Analysis of Dimensionality Reduction Results with Contrastive Learning***.
 Takanori Fujiwara, Oh-Hyun Kwon, and Kwan-Liu Ma.
-To appear in IEEE Transactions on Visualization and Computer Graphics and IEEE VIS 2019 (VAST).
+IEEE Transactions on Visualization and Computer Graphics and IEEE VIS 2019 (VAST).
+DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
 
 * Demonstration of a system using ccPCA: http://kwonoh.net/ccpca/
 
@@ -17,13 +18,18 @@ To appear in IEEE Transactions on Visualization and Computer Graphics and IEEE V
 
   * Algorithms for generating an effective, scalable feature contribution visualization, including optimal sign flipping of (c)PCA, matrix reordering, and aggregation.
 
+* Use case examples
+  * Analysis of dimensionality reduction results (compare some points with others)
+  * Analysis of clustering results (compare some cluster with others)
+  * Analysis of labeled data (compare some label with others)
+
 ******
 
 Requirements
 -----
 * C++11 compiler, Python3, Eigen3, Pybind11, Numpy
 
-* Note: Tested on macOS Mojave. Linux is also supported (testing will be done soon).
+* Note: Tested on macOS Mojave. Linux is also supported (tested on Ubuntu 19.0.4 LTS).
 
 ******
 
@@ -43,7 +49,7 @@ Setup
 
     `pip3 install numpy`
 
-* Move to "ccpca" directory
+* Move to "ccpca/ccpca" directory
 
 * Build source codes with cmake
 
@@ -61,7 +67,7 @@ Setup
 
 * If you want to use the algorithms for scalable visualization of features' contributions, please follow the next steps.
 
-* Move to "fc_view" directory
+* Move to "ccpca/fc_view" directory
 
 * Install the modules with pip3
 
@@ -83,11 +89,15 @@ Setup
 
     `pip3 install numpy`
 
-* Move to "ccpca" directory
+* Move to "ccpca/ccpca" directory
 
-* Build source codes with:
+* Build source codes with (need to run both two commands below):
+
+    Building cPCA:
 
     ``c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -I/usr/include/eigen3/ -fPIC `python3 -m pybind11 --includes` cpca.cpp cpca_wrap.cpp -o cpca_cpp`python3-config --extension-suffix` ``
+
+    Building ccPCA:
 
     ``c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -I/usr/include/eigen3/ -fPIC `python3 -m pybind11 --includes` cpca.cpp cpca_wrap.cpp ccpca.cpp ccpca_wrap.cpp -o ccpca_cpp`python3-config --extension-suffix` ``
 
@@ -97,11 +107,19 @@ Setup
 
     `pip3 install .`
 
+* You can test with sample.py
+
+    `pip3 install matplotlib`
+
+    `pip3 install sklearn`
+
+    `python3 sample.py`
+
 ##### 2) Installation of fc-view
 
 * If you want to use the algorithms for scalable visualization of features' contributions, please follow the next steps.
 
-* Move to "fc_view" directory
+* Move to "ccpca/fc_view" directory
 
 * Install the modules with pip3
 
@@ -122,4 +140,5 @@ Usage
 ## How to Cite
 Please, cite:    
 Takanori Fujiwara, Oh-Hyun Kwon, and Kwan-Liu Ma, "Supporting Analysis of Dimensionality Reduction Results with Contrastive Learning".
-To appear in IEEE Transactions on Visualization and Computer Graphics and IEEE VIS 2019 (VAST).
+IEEE Transactions on Visualization and Computer Graphics, 2019.
+DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
