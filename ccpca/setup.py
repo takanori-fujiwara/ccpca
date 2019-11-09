@@ -6,9 +6,8 @@ ccpca_cpp_so = glob.glob('ccpca_cpp*.so')[0]
 
 setup(
     name='ccpca',
-    version=0.1,
+    version=0.11,
     packages=[''],
     package_dir={'': '.'},
     package_data={'': [cpca_cpp_so, ccpca_cpp_so]},
-    py_modules = ['cpca_cpp', 'ccpca_cpp', 'cpca', 'ccpca']
-)
+    py_modules=['cpca_cpp', 'ccpca_cpp', 'cpca', 'ccpca'])

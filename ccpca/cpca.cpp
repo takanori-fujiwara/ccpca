@@ -25,8 +25,22 @@ void CPCA::fit(Eigen::MatrixXf const &fg, Eigen::MatrixXf const &bg,
                float const alpha) {
   fg_ = fg;
   bg_ = bg;
-  Eigen::Index nFeaturesFg = fg.cols();
-  Eigen::Index nFeaturesBg = bg.cols();
+
+  Eigen::Index fgSize = fg_.size();
+  Eigen::Index bgSize = bg_.size();
+
+  if (fgSize == 0 && bgSize == 0) {
+    std::cerr << "Both target and background matrices are empty." << std::endl;
+  } else if (fgSize == 0) {
+    // the result will be the same with when alpha is +inf
+    fg_ = Eigen::MatrixXf::Zero(1, bg_.cols());
+  } else if (bgSize == 0) {
+    // the result will be the same with ordinary PCA
+    bg_ = Eigen::MatrixXf::Zero(1, fg_.cols());
+  }
+
+  Eigen::Index nFeaturesFg = fg_.cols();
+  Eigen::Index nFeaturesBg = bg_.cols();
 
   if (nFeaturesFg != nFeaturesBg) {
     std::cerr << "# of features of foregraound and background must be the same."
@@ -48,8 +62,10 @@ void CPCA::fit(Eigen::MatrixXf const &fg, Eigen::MatrixXf const &bg,
     bg_ = bg_.unaryExpr([](float v) { return std::isfinite(v) ? v : 0.0f; });
   }
 
-  fgCov_ = (fg_.adjoint() * fg_) / float(fg_.rows() - 1);
-  bgCov_ = (bg_.adjoint() * bg_) / float(bg_.rows() - 1);
+  fgCov_ = (fg_.adjoint() * fg_) /
+           std::fmax(float(fg_.rows() - 1), std::numeric_limits<float>::min());
+  bgCov_ = (bg_.adjoint() * bg_) /
+           std::fmax(float(bg_.rows() - 1), std::numeric_limits<float>::min());
 
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXf> es(fgCov_ - alpha * bgCov_);
   components_ = es.eigenvectors().rightCols(nComponents_).rowwise().reverse();
@@ -81,7 +97,9 @@ Eigen::MatrixXf CPCA::transform(Eigen::MatrixXf const &X) {
 std::vector<float> CPCA::logspace(float const start, float const end,
                                   unsigned int const num, float const base) {
   float realStart = std::pow(base, start);
-  float realBase = std::pow(base, (end - start) / float(num - 1));
+  float realBase = std::pow(
+      base, (end - start) /
+                std::fmax(float(num - 1), std::numeric_limits<float>::min()));
 
   std::vector<float> result;
   result.reserve(num);
