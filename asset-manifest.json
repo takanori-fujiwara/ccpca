@@ -1,7 +1,16 @@
 {
-  "main.css": "/ccpca/static/css/main.3bd542d0.chunk.css",
-  "main.js": "/ccpca/static/js/main.1c20dbe0.chunk.js",
+  "main.css": "/ccpca/static/css/main.d2d5ea33.chunk.css",
+  "main.js": "/ccpca/static/js/main.5cc4a935.chunk.js",
   "runtime~main.js": "/ccpca/static/js/runtime~main.a5de4585.js",
   "vendors~main.js": "/ccpca/static/js/vendors~main.a15774a9.chunk.js",
-  "index.html": "/ccpca/index.html"
+  "./service-worker.js": "/ccpca/./service-worker.js",
+  "favicon.ico": "/ccpca/favicon.ico",
+  "index.html": "/ccpca/index.html",
+  "manifest.json": "/ccpca/manifest.json",
+  "precache-manifest.e0afdb3ac1bf8d3bcb23697490486a97.js": "/ccpca/precache-manifest.e0afdb3ac1bf8d3bcb23697490486a97.js",
+  "resources/colormap/colormaps.png": "/ccpca/resources/colormap/colormaps.png",
+  "resources/colormap/colormaps_original.png": "/ccpca/resources/colormap/colormaps_original.png",
+  "resources/images/colormap.png": "/ccpca/resources/images/colormap.png",
+  "resources/images/map-fill.svg": "/ccpca/resources/images/map-fill.svg",
+  "resources/images/map.svg": "/ccpca/resources/images/map.svg"
 }

@@ -1,6 +1,6 @@
 {
     "short_name": "ccPCA",
-    "name": "ccPCA: PCA for contrasting clusters",
+    "name": "ccPCA: Supporting Analysis of Dimensionality Reduction Results with Contrastive Learning",
     "icons": [
         {
             "src": "favicon.ico",
