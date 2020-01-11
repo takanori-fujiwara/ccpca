@@ -91,7 +91,9 @@ float CCPCA::bestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
 
   bestAlpha_ = 0.0f;
   auto baseVarK = scaledVar(bestProjK, bestProjR).first;
-  auto bestDiscrepancy = -histIntersect(bestProjK, bestProjR);
+  auto bestDiscrepancy =
+      1.0f / std::max(float(histIntersect(bestProjK, bestProjR)),
+                      std::numeric_limits<float>::min());
 
   reports_.clear();
   if (keepReports) {
