@@ -1,6 +1,7 @@
 #  Because pybind11 cannot generate default parameters well, this code is to set them
 
 import ccpca_cpp
+import numpy as np
 
 
 class CCPCA(ccpca_cpp.CCPCA):
@@ -152,7 +153,7 @@ class CCPCA(ccpca_cpp.CCPCA):
         alpha: None or float, optional (default=None)
             If using manual alpha selection (i.e., auto_alpha_selection is
             False), this alpha value is used for fit(). If alpha is None, alpha
-            is automatically set to 0.0.
+            is automatically set to 0.0 and auto_alpha_selection is used.
         var_thres_ratio: float, optional, (default=0.5)
             Ratio threshold of variance of K to keep (the parameter gamma in
             our paper).
@@ -176,13 +177,18 @@ class CCPCA(ccpca_cpp.CCPCA):
             support when running in parallel.
         Returns
         -------
-        None
+        self.
         """
         if alpha == None:
             alpha = 0.0
+            auto_alpha_selection = True
+        else:
+            auto_alpha_selection = False
 
         super().fit(K, R, auto_alpha_selection, alpha, var_thres_ratio,
                     parallel, n_alphas, max_log_alpha, keep_reports)
+
+        return self
 
     def transform(self, X):
         """Obtaining transformed result Y with X and current cPCs.
@@ -199,6 +205,68 @@ class CCPCA(ccpca_cpp.CCPCA):
             Returns the transformed (or projected) result.
         """
         return super().transform(X)
+
+    def fit_transform(self,
+                      K,
+                      R,
+                      auto_alpha_selection=True,
+                      alpha=None,
+                      var_thres_ratio=0.5,
+                      parallel=True,
+                      n_alphas=40,
+                      max_log_alpha=3.0,
+                      keep_reports=False):
+        """ Applying fit first and then return transformed matrix of E (i.e.,
+        vertical stack of K and R).
+        If using auto alpha selection, find the best contrast parameter alpha
+        first. Otherwise, input alpha value is used for fit. Then, fit using
+        cPCA with the (best) alpha. For cPCA, a matrix E concatenating K and R
+        will be used as a foreground dataset and R will be used as a background
+        dataset.
+
+        Parameters
+        ----------
+        K: array-like, shape(n_samples, n_components)
+            A target cluster.
+        R: array of array-like, n_groups x shape(n_samples, n_components)
+            Background datasets.
+        auto_alpha_selection: bool, optional (default=True)
+            If True, the best alpha is automatically found and used for fit().
+            If False, input alpha is used for fit().
+        alpha: None or float, optional (default=None)
+            If using manual alpha selection (i.e., auto_alpha_selection is
+            False), this alpha value is used for fit(). If alpha is None, alpha
+            is automatically set to 0.0 and auto_alpha_selection is used.
+        var_thres_ratio: float, optional, (default=0.5)
+            Ratio threshold of variance of K to keep (the parameter gamma in
+            our paper).
+        parallel: bool, optional, (default=True)
+            If True, multithread implemented in C++ will be used for
+            calculation.
+        n_alphas: int, optional, (default=40)
+            A number of alphas to check to find the best one.
+        max_log_alpha: float, optional, (default=3.0)
+            10.0 ** max_log_alpha is the maximum value of alpha will be used.
+            Even though this default parameter (i.e., 3.0) follows the original
+            cPCA by [Abid and Zhang et al., 2018], you may want to set a much
+            smaller value based on the dataset (e.g., 0.5 or 1.0 works well
+            from our experience).
+        keep_reports: bool, optional, (default=False)
+            If True, while automatic alpha selection, reports are recorded. The
+            reports include "alpha", "discrepancy score", "variance score",
+            "1D projection of K", "1D projection of R", and "cPC loadings".
+            These reports can be obtained via get_reports() method.
+            Use parallel=False togerther. Currently, this function does not
+            support when running in parallel.
+        Returns
+        -------
+        Y : array-like, shape (n_samples, n_components)
+            Returns the transformed (or projected) result.
+        """
+        self.fit(K, R, auto_alpha_selection, alpha, var_thres_ratio, parallel,
+                 n_alphas, max_log_alpha, keep_reports)
+
+        return self.transform(np.vstack((K, R)))
 
     def best_alpha(self,
                    K,

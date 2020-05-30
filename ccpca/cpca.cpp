@@ -4,6 +4,7 @@
 #include <Eigen/QR>
 #include <Eigen/SVD>
 #include <chrono>
+#include <cmath>
 #include <iostream>
 #include <utility>
 
@@ -14,15 +15,30 @@ CPCA::CPCA(Eigen::Index const nComponents, bool const standardize)
 
 void CPCA::initialize() { components_.resize(0, 0); }
 
-Eigen::MatrixXf CPCA::fitTransform(Eigen::MatrixXf const &fg,
-                                   Eigen::MatrixXf const &bg,
-                                   float const alpha) {
-  fit(fg, bg, alpha);
+Eigen::MatrixXf
+CPCA::fitTransform(Eigen::MatrixXf const &fg, Eigen::MatrixXf const &bg,
+                   bool const autoAlphaSelection, float const alpha,
+                   float const eta, float const convergenceRatio,
+                   unsigned int maxIter, bool const keepReports) {
+  fit(fg, bg, autoAlphaSelection, alpha, eta, convergenceRatio, maxIter,
+      keepReports);
   return transform(fg_);
 }
 
 void CPCA::fit(Eigen::MatrixXf const &fg, Eigen::MatrixXf const &bg,
-               float const alpha) {
+               bool const autoAlphaSelection, float const alpha,
+               float const eta, float const convergenceRatio,
+               unsigned int maxIter, bool const keepReports) {
+  if (autoAlphaSelection) {
+    fitWithBestAlpha(fg, bg, alpha, eta, convergenceRatio, maxIter,
+                     keepReports);
+  } else {
+    fitWithManualAlpha(fg, bg, alpha);
+  }
+}
+
+void CPCA::fitWithManualAlpha(Eigen::MatrixXf const &fg,
+                              Eigen::MatrixXf const &bg, float const alpha) {
   fg_ = fg;
   bg_ = bg;
 
@@ -74,6 +90,16 @@ void CPCA::fit(Eigen::MatrixXf const &fg, Eigen::MatrixXf const &bg,
   loadings_ = components_.array().rowwise() * eigenvalues.array().abs().sqrt();
 }
 
+void CPCA::fitWithBestAlpha(Eigen::MatrixXf const &fg,
+                            Eigen::MatrixXf const &bg, float const initAlpha,
+                            float const eta, float const convergenceRatio,
+                            unsigned int const maxIter,
+                            bool const keepReports) {
+  bestAlpha(fg, bg, initAlpha, eta, convergenceRatio, maxIter, keepReports);
+  // updateComponents(bestAlpha_);
+  fitWithManualAlpha(fg, bg, bestAlpha_);
+}
+
 void CPCA::updateComponents(float const alpha) {
   if (components_.cols() == 0) {
     std::cerr << "Run fit() at least once before updateComponents()"
@@ -92,6 +118,86 @@ Eigen::MatrixXf CPCA::transform(Eigen::MatrixXf const &X) {
     std::cerr << "Run fit() before transform()" << std::endl;
   }
   return X * components_;
+}
+
+float CPCA::bestAlpha(Eigen::MatrixXf const &fg, Eigen::MatrixXf const &bg,
+                      float const initAlpha, float const eta,
+                      float const convergenceRatio, unsigned int const maxIter,
+                      bool const keepReports) {
+  reports_.clear();
+  float alpha = initAlpha;
+  fit(fg, bg, alpha);
+
+  // method 1. discard minor eigenvectors to avoid singular
+  // Eigen::SelfAdjointEigenSolver<Eigen::MatrixXf> esQ(bgCov_);
+  // float ratioToKeep = 0.999f;
+  // Eigen::RowVectorXf eigenvalues = esQ.eigenvalues().real().reverse();
+  // float targetTotalEigenVal = eigenvalues.sum() * ratioToKeep;
+  // Eigen::Index nEigenVectorsToKeep = 0;
+  // while (targetTotalEigenVal > 0) {
+  //     targetTotalEigenVal -= eigenvalues(nEigenVectorsToKeep);
+  //     nEigenVectorsToKeep++;
+  // }
+  // float ratioToKeep = 0.9f;
+  // Eigen::Index nEigenVectorsToKeep = Eigen::Index(bg.cols() * ratioToKeep);
+  //
+  // std::cout << fg.cols() << " " << nEigenVectorsToKeep << std::endl;
+  //
+  // Eigen::MatrixXf Q =
+  //     esQ.eigenvectors().rightCols(nEigenVectorsToKeep).rowwise().reverse();
+  // Eigen::MatrixXf fgCovQ = Q.adjoint() * fgCov_ * Q;
+  // Eigen::MatrixXf bgCovQ = Q.adjoint() * bgCov_ * Q;
+  //
+  // Eigen::SelfAdjointEigenSolver<Eigen::MatrixXf> esU(fgCovQ - alpha *
+  // bgCovQ); Eigen::MatrixXf U =
+  //     esU.eigenvectors().rightCols(nComponents_).rowwise().reverse();
+  //
+  // if (keepReports) {
+  //   reports_.push_back(alpha);
+  // }
+  //
+  // for (unsigned int i = 0; i < maxIter; ++i) {
+  //   float fgTr = (U.adjoint() * fgCovQ * U).trace();
+  //   float bgTr = (U.adjoint() * bgCovQ * U).trace();
+  //   bgTr = std::fmax(bgTr, std::numeric_limits<float>::min());
+  //   alpha = fgTr / bgTr;
+  //
+  //   // update U
+  //   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXf> esU(fgCovQ - alpha *
+  //   bgCovQ); U =
+  //   esU.eigenvectors().rightCols(nComponents_).rowwise().reverse();
+  //
+  //   if (keepReports) {
+  //     reports_.push_back(alpha);
+  //   }
+  // }
+  // bestAlpha_ = alpha;
+
+  // method 2: add small constant to diag of bgCov_ to avoid singular
+  bgCov_ += Eigen::MatrixXf::Identity(bgCov_.rows(), bgCov_.cols()) * eta;
+
+  if (keepReports) {
+    reports_.push_back(alpha);
+  }
+
+  for (unsigned int i = 0; i < maxIter; ++i) {
+    float fgTr = (components_.adjoint() * fgCov_ * components_).trace();
+    float bgTr = (components_.adjoint() * bgCov_ * components_).trace();
+    bgTr = std::fmax(bgTr, std::numeric_limits<float>::min());
+
+    float prevAlpha = alpha;
+    alpha = fgTr / bgTr;
+    updateComponents(alpha);
+    if (keepReports) {
+      reports_.push_back(alpha);
+    }
+
+    if (std::abs(prevAlpha - alpha) / alpha < convergenceRatio)
+      break;
+  }
+  bestAlpha_ = alpha;
+
+  return bestAlpha_;
 }
 
 std::vector<float> CPCA::logspace(float const start, float const end,
