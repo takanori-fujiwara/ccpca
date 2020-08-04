@@ -14,12 +14,16 @@ PYBIND11_MODULE(cpca_cpp, m) {
       .def("initialize", &CPCA::initialize)
       .def("fit", &CPCA::fit)
       .def("transform", &CPCA::transform)
-      .def("fit_transform", &CPCA::fitTransform)
+      // .def("fit_transform", &CPCA::fitTransform)
+      .def("best_alpha", &CPCA::bestAlpha)
       .def("update_components", &CPCA::updateComponents)
+      .def("best_alpha", &CPCA::bestAlpha)
       .def("logspace", &CPCA::logspace)
       .def("get_components", &CPCA::getComponents)
       .def("get_component", &CPCA::getComponent)
       .def("get_loadings", &CPCA::getLoadings)
       .def("get_loading", &CPCA::getLoading)
-      .def("get_current_fg", &CPCA::getCurrentFg);
+      .def("get_current_fg", &CPCA::getCurrentFg)
+      .def("get_best_alpha", &CPCA::getBestAlpha)
+      .def("get_reports", &CPCA::getReports);
 }

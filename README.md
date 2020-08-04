@@ -10,9 +10,11 @@ DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
 * Demonstration of a system using ccPCA: http://kwonoh.net/ccpca/
 
 * Features
-  * Fast C++ implementation with Eigen3 of Contrastive PCA (cPCA) from [Abid and Zhang et al., 2018].
+  * Fast C++ implementation with Eigen3 of Contrastive PCA (cPCA) from [Abid and Zhang et al., 2018].<br />
     * A. Abid, M. J. Zhang, V. K. Bagaria, and J. Zou. Exploring patterns enriched in a dataset with contrastive principal component analysis, Nature Communicationsvolume,Vol. 9, No. 1, pp. 2134, 2018.
     * https://github.com/abidlabs/contrastive
+  * <span style="color:#ff8888">NEW!</span> Also, full automatic selection of contrastive parameter alpha from [Fujiwara et al., 2020].
+    * T. Fujiwara, J. Zhao, F. Chen, Y. Xu, and K.-L. Ma. Interpretable Contrastive Learning for Networks, 	arXiv:2005.12419, 2020.
 
   * An extended version of cPCA (ccPCA) for contrasting clusters.
 
@@ -116,3 +118,8 @@ Please, cite:
 Takanori Fujiwara, Oh-Hyun Kwon, and Kwan-Liu Ma, "Supporting Analysis of Dimensionality Reduction Results with Contrastive Learning".
 IEEE Transactions on Visualization and Computer Graphics, 2020.
 DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
+
+If you use cPCA with automatic selection of contrastive parameter alpha, please cite:
+Takanori Fujiwara, Jian Zhao, Francine Chen, Yaoliang Xu, and Kwan-Liu Ma,
+"Interpretable Contrastive Learning for Networks". 	arXiv:2005.12419, 2020.
+https://arxiv.org/abs/2005.12419

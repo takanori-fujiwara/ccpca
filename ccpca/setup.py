@@ -35,15 +35,9 @@ cpca_cpp_so = glob.glob('cpca_cpp*.so')[0]
 ccpca_cpp_so = glob.glob('ccpca_cpp*.so')[0]
 
 setup(name='ccpca',
-      version=0.12,
+      version=0.13,
       packages=[''],
       package_dir={'': '.'},
       package_data={'': [cpca_cpp_so, ccpca_cpp_so]},
       install_requires=['numpy'],
       py_modules=['cpca_cpp', 'ccpca_cpp', 'cpca', 'ccpca'])
-
-# path = os.path.abspath(__file__)
-# clone = "git clone https://github.com/takanori-fujiwara/ccpca.git"
-
-# os.chdir(path)
-# os.system(clone)

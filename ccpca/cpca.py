@@ -57,7 +57,15 @@ class CPCA(cpca_cpp.CPCA):
         """
         super().initialize()
 
-    def fit(self, fg, bg, alpha):
+    def fit(self,
+            fg,
+            bg,
+            auto_alpha_selection=True,
+            alpha=None,
+            eta=1e-3,
+            convergence_ratio=1e-2,
+            max_iter=10,
+            keep_reports=False):
         """Fit the model with a foreground matrix and a background matrix.
 
         Parameters
@@ -67,16 +75,34 @@ class CPCA(cpca_cpp.CPCA):
         bg: array-like, shape (n_samples, n_features)
             A background dataset. This column size must be the same size with
             fg. (A row size can be different from fg.)
+        auto_alpha_selection:
+            If True, find auto_alpha_selection for fit. Otherwise, compute PCs
+            based on input alpha.
         alpha: float
             A contrast parameter, which quantifies the trade-off between having
             high target variance and low background variance. alpha must be
             equal to or larger than 0. If 0, the result will be the same with
-            the ordinary PCA.
+            the ordinary PCA. If auto_alpha_selection is True, this alpha is
+            used as an initial alpha value for auto selection.
+        epoch: int, optional, (default=10)
+            The number of alpha updates.
+        keep_reports: bool, optional, (default=False)
+            If True, while automatic alpha selection, reports are recorded. The
+            reports are the history of "alpha" values.
         Returns
         -------
-        None.
+        self.
         """
-        super().fit(fg, bg, alpha)
+        if alpha == None:
+            alpha = 0.0
+            auto_alpha_selection = True
+        else:
+            auto_alpha_selection = False
+
+        super().fit(fg, bg, auto_alpha_selection, alpha, eta,
+                    convergence_ratio, max_iter, keep_reports)
+
+        return self
 
     def transform(self, X):
         """Obtaining transformed result Y with X and current PCs.
@@ -94,9 +120,17 @@ class CPCA(cpca_cpp.CPCA):
         """
         return super().transform(X)
 
-    def fit_transform(self, fg, bg, alpha):
-        """Fit the model with fg and bg, and then apply the dimensionality
-        reduction on fg.
+    def fit_transform(self,
+                      fg,
+                      bg,
+                      auto_alpha_selection=True,
+                      alpha=None,
+                      eta=1e-3,
+                      convergence_ratio=1e-2,
+                      max_iter=10,
+                      keep_reports=False):
+        """Fit the model with a foreground matrix and a background matrix and
+        then obtain transformed result of fg and current PCs.
 
         Parameters
         ----------
@@ -105,17 +139,28 @@ class CPCA(cpca_cpp.CPCA):
         bg: array-like, shape (n_samples, n_features)
             A background dataset. This column size must be the same size with
             fg. (A row size can be different from fg.)
+        auto_alpha_selection:
+            If True, find auto_alpha_selection for fit. Otherwise, compute PCs
+            based on input alpha.
         alpha: float
             A contrast parameter, which quantifies the trade-off between having
             high target variance and low background variance. alpha must be
             equal to or larger than 0. If 0, the result will be the same with
-            the ordinary PCA.
+            the ordinary PCA. If auto_alpha_selection is True, this alpha is
+            used as an initial alpha value for auto selection.
+        epoch: int, optional, (default=10)
+            The number of alpha updates.
+        keep_reports: bool, optional, (default=False)
+            If True, while automatic alpha selection, reports are recorded. The
+            reports are the history of "alpha" values.
         Returns
         -------
         Y : array-like, shape (n_samples, n_components)
             The transformed (or projected) result.
         """
-        return super().fit_transform(fg, bg, alpha)
+        self.fit(fg, bg, auto_alpha_selection, alpha, eta, convergence_ratio,
+                 max_iter, keep_reports)
+        return self.transform(fg)
 
     def update_components(self, alpha):
         """Update the components with a new contrast parameter alpha. Before
@@ -134,6 +179,48 @@ class CPCA(cpca_cpp.CPCA):
         None.
         """
         super().update_components(alpha)
+
+    def best_alpha(self,
+                   fg,
+                   bg,
+                   init_alpha=0.0,
+                   eta=1e-3,
+                   convergence_ratio=1e-2,
+                   max_iter=10,
+                   keep_reports=False):
+        """Finds the best contrast parameter alpha which has high discrepancy
+        score between the dimensionality reduced K and the dimensionality
+        reduced R while keeping the variance of K with the ratio threshold
+        var_thres_ratio.
+        For cPCA, a matrix E concatenating K and R will be used as a foreground
+        dataset and R will be used as a background dataset.
+        Parameters
+        ----------
+        fg: array-like, shape (n_samples, n_features)
+            A foreground (or target) dataset.
+        bg: array-like, shape (n_samples, n_features)
+            A background dataset. This column size must be the same size with
+            fg. (A row size can be different from fg.)
+        init_alpha: float, optional, (default=0.0)
+            An initial value of alpha.
+        epoch: int, optional, (default=10)
+            The number of alpha updates.
+        keep_reports: bool, optional, (default=False)
+            If True, while automatic alpha selection, reports are recorded. The
+            reports are the history of "alpha" values.
+        Returns
+        -------
+        best_alpha: float
+            The found best alpha.
+        """
+        super().best_alpha(
+            fg,
+            bg,
+            init_alpha=init_alpha,
+            eta=eta,
+            convergence_ratio=convergence_ratio,
+            max_iter=max_iter,
+            keep_reports=keep_reports)
 
     def logspace(self, start, end, num, base=10.0):
         """Generate logarithmic space.
@@ -210,3 +297,16 @@ class CPCA(cpca_cpp.CPCA):
             i-th principal component loading.
         """
         return super().get_loading(index)
+
+    def get_reports(self):
+        """Returns the reports kept while automatic selection of alpha. To get
+        reports, you need to set keep_reports=True in the corresponding method.
+        Parameters
+        ----------
+        None
+        -------
+        reports: array-like(n_alphas, 1),
+            alpha values (at the same time optimization scores) obtained through
+            best alpha selection".
+        """
+        return super().get_reports()
