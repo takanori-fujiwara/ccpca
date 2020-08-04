@@ -29,7 +29,7 @@ Requirements
 -----
 * C++11 compiler, Python3, Eigen3, Pybind11, Numpy
 
-* Note: Tested on macOS Mojave. Linux is also supported (tested on Ubuntu 19.0.4 LTS).
+* Note: Tested on macOS Mojave. Linux is also supported (tested on Ubuntu 20.0.4 LTS).
 
 ******
 
@@ -39,29 +39,19 @@ Setup
 
 ##### 1) Installation of ccPCA
 
-* Install required libraries
-
-    `brew install python3`
-
-    `brew install eigen`
-
-    `brew install pybind11`
-
-    `pip3 install numpy`
-
 * Move to "ccpca/ccpca" directory
 
-* Build source codes with cmake
-
-    `cmake .`
-
-    `make`
-
-* This generates a shared library, "cpca_cpp.xxxx.so" and "ccpca_cpp.xxxx.so" (e.g., ccpca_cpp.cpython-37m-darwin.so).
+* Install the modules with pip3 (this installs homebrew, python3, eigen, pybind11, numpy).
 
 * Install the modules with pip3.
 
     `pip3 install .`
+
+* You can test with sample.py
+
+    `pip3 install matplotlib sklearn`
+
+    `python3 sample.py`
 
 ##### 2) Installation of fc-view
 
@@ -73,7 +63,7 @@ Setup
 
     `pip3 install . `
 
-#### Linux (tested on Ubuntu 19.0.4 LTS)
+#### Linux (tested on Ubuntu 20.0.4 LTS)
 
 ##### 1) Installation of ccPCA
 
@@ -81,37 +71,21 @@ Setup
 
     `sudo apt update`
 
-    `sudo apt install libeigen3-dev`
+    `sudo apt install libeigen3-dev python3-pip python3-dev`
 
-    `sudo apt install python3-pip python3-dev`
-
-    `pip3 install pybind11`
-
-    `pip3 install numpy`
+    * Note: Replace apt commands based on your Linux OS.
 
 * Move to "ccpca/ccpca" directory
-
-* Build source codes with (need to run both two commands below):
-
-    Building cPCA:
-
-    ``c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -I/usr/include/eigen3/ -fPIC `python3 -m pybind11 --includes` cpca.cpp cpca_wrap.cpp -o cpca_cpp`python3-config --extension-suffix` ``
-
-    Building ccPCA:
-
-    ``c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -I/usr/include/eigen3/ -fPIC `python3 -m pybind11 --includes` cpca.cpp cpca_wrap.cpp ccpca.cpp ccpca_wrap.cpp -o ccpca_cpp`python3-config --extension-suffix` ``
-
-* This generates a shared library, "cpca_cpp.xxxx.so" and "ccpca_cpp.xxxx.so" (e.g., ccpca_cpp.cpython-37m-x86_64-linux-gnu.so).
 
 * Install the modules with pip3.
 
     `pip3 install .`
 
+    * Note: If installation does not work, check setup.py and replace c++ commands based on your environment.
+
 * You can test with sample.py
 
-    `pip3 install matplotlib`
-
-    `pip3 install sklearn`
+    `pip3 install matplotlib sklearn`
 
     `python3 sample.py`
 
@@ -140,5 +114,5 @@ Usage
 ## How to Cite
 Please, cite:    
 Takanori Fujiwara, Oh-Hyun Kwon, and Kwan-Liu Ma, "Supporting Analysis of Dimensionality Reduction Results with Contrastive Learning".
-IEEE Transactions on Visualization and Computer Graphics, 2019.
+IEEE Transactions on Visualization and Computer Graphics, 2020.
 DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
