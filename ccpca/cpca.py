@@ -48,7 +48,6 @@ class CPCA(cpca_cpp.CPCA):
     Notes
     -----
     """
-
     def __init__(self, n_components=2, standardize=True):
         super().__init__(n_components, standardize)
 
@@ -78,14 +77,15 @@ class CPCA(cpca_cpp.CPCA):
         auto_alpha_selection:
             If True, find auto_alpha_selection for fit. Otherwise, compute PCs
             based on input alpha.
-        alpha: float
-            A contrast parameter, which quantifies the trade-off between having
-            high target variance and low background variance. alpha must be
-            equal to or larger than 0. If 0, the result will be the same with
-            the ordinary PCA. If auto_alpha_selection is True, this alpha is
-            used as an initial alpha value for auto selection.
-        epoch: int, optional, (default=10)
-            The number of alpha updates.
+        eta: float, optional, (default=1e-3)
+            Small constant value that will add to covariance matrix of bg when
+            applying automatic alpha selection. Smaller eta tends to allow
+            a larger alpha as the best alpha.
+        convergence_ratio: float, optional, (default=1e-2)
+            Threshold of improvement ratio for convergence of automatic alpha
+            selection.
+        max_iter=10: int, optional, (default=10)
+            The number of alpha updates at most.
         keep_reports: bool, optional, (default=False)
             If True, while automatic alpha selection, reports are recorded. The
             reports are the history of "alpha" values.
@@ -148,8 +148,15 @@ class CPCA(cpca_cpp.CPCA):
             equal to or larger than 0. If 0, the result will be the same with
             the ordinary PCA. If auto_alpha_selection is True, this alpha is
             used as an initial alpha value for auto selection.
-        epoch: int, optional, (default=10)
-            The number of alpha updates.
+        eta: float, optional, (default=1e-3)
+            Small constant value that will add to covariance matrix of bg when
+            applying automatic alpha selection. Smaller eta tends to allow
+            a larger alpha as the best alpha.
+        convergence_ratio: float, optional, (default=1e-2)
+            Threshold of improvement ratio for convergence of automatic alpha
+            selection.
+        max_iter=10: int, optional, (default=10)
+            The number of alpha updates at most.
         keep_reports: bool, optional, (default=False)
             If True, while automatic alpha selection, reports are recorded. The
             reports are the history of "alpha" values.
@@ -213,14 +220,13 @@ class CPCA(cpca_cpp.CPCA):
         best_alpha: float
             The found best alpha.
         """
-        super().best_alpha(
-            fg,
-            bg,
-            init_alpha=init_alpha,
-            eta=eta,
-            convergence_ratio=convergence_ratio,
-            max_iter=max_iter,
-            keep_reports=keep_reports)
+        super().best_alpha(fg,
+                           bg,
+                           init_alpha=init_alpha,
+                           eta=eta,
+                           convergence_ratio=convergence_ratio,
+                           max_iter=max_iter,
+                           keep_reports=keep_reports)
 
     def logspace(self, start, end, num, base=10.0):
         """Generate logarithmic space.
