@@ -10,9 +10,9 @@ if sys.platform.startswith('darwin'):
             '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
         )
     print('installing python3, eigen, pybind11')
-    os.system('brew install python3 eigen pybind11')
+    os.system('brew install pkg-config python3 eigen pybind11')
     print('processing cmake')
-    os.system('rm CMakeCache.txt')
+    os.system('rm -f CMakeCache.txt')
     os.system('cmake .')
     print('processing make')
     os.system('make')

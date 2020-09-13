@@ -43,9 +43,7 @@ Setup
 
 * Move to "ccpca/ccpca" directory
 
-* Install the modules with pip3 (this installs homebrew, python3, eigen, pybind11, numpy).
-
-* Install the modules with pip3.
+* Install the modules with pip3 (this installs homebrew, pkg-config, python3, eigen, pybind11, numpy).
 
     `pip3 install .`
 
