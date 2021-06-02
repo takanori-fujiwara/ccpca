@@ -11,11 +11,20 @@ if sys.platform.startswith('darwin'):
         )
     print('installing python3, eigen, pybind11')
     os.system('brew install pkg-config python3 eigen pybind11')
-    print('processing cmake')
-    os.system('rm -f CMakeCache.txt')
-    os.system('cmake .')
-    print('processing make')
-    os.system('make')
+    ## This part can be used to build with CMake (but for anaconda env, this doesn't work well)
+    # print('processing cmake')
+    # os.system('rm -f CMakeCache.txt')
+    # os.system('cmake .')
+    # print('processing make')
+    # os.system('make')
+    print('building cPCA')
+    os.system(
+        'c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -undefined dynamic_lookup -I/usr/local/include/eigen3/ $(python3 -m pybind11 --includes) cpca.cpp cpca_wrap.cpp -o cpca_cpp$(python3-config --extension-suffix)'
+    )
+    print('building ccPCA')
+    os.system(
+        'c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -undefined dynamic_lookup -I/usr/local/include/eigen3/ $(python3 -m pybind11 --includes) cpca.cpp cpca_wrap.cpp ccpca.cpp ccpca_wrap.cpp -o ccpca_cpp$(python3-config --extension-suffix)'
+    )
 elif sys.platform.startswith('linux'):
     print('installing pybind11')
     os.system('pip3 install pybind11')
