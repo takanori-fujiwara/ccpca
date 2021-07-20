@@ -3,6 +3,18 @@ import sys
 import glob
 from distutils.core import setup
 
+for cpca_cpp in glob.glob('cpca_cpp*.so'):
+    try:
+        os.remove(cpca_cpp)
+    except OSError:
+        print("Error while deleting cpca_cpp shared object files")
+
+for ccpca_cpp in glob.glob('ccpca_cpp*.so'):
+    try:
+        os.remove(ccpca_cpp)
+    except OSError:
+        print("Error while deleting ccpca_cpp shared object files")
+
 if sys.platform.startswith('darwin'):
     if os.system('which brew') > 0:
         print('installing homebrew')
