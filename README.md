@@ -29,9 +29,11 @@ DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
 
 Requirements
 -----
+* macOS or Linux (Windows are not supported yet)
+
 * C++11 compiler, Python3, Eigen3, Pybind11, Numpy
 
-* Note: Tested on macOS Mojave. Linux is also supported (tested on Ubuntu 20.0.4 LTS).
+* Note: Tested on macOS Mojave and Ubuntu 20.0.4 LTS. Currently, usage in <span style="color:#8888ff">Google Colab is not supported</span>. (This is because when using ccpca via Python, ccpca needs to import shared libraries produced by Pybind11 ('cpca_cpp.so' and 'ccpca_cpp.so').  I will appreciate if somebody can help solve this problem.)
 
 ******
 
