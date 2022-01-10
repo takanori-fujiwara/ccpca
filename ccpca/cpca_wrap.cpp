@@ -21,6 +21,8 @@ PYBIND11_MODULE(cpca_cpp, m) {
       .def("logspace", &CPCA::logspace)
       .def("get_components", &CPCA::getComponents)
       .def("get_component", &CPCA::getComponent)
+      .def("get_eigenvalues", &CPCA::getEigenvalues)
+      .def("get_eigenvalue", &CPCA::getEigenvalue)
       .def("get_loadings", &CPCA::getLoadings)
       .def("get_loading", &CPCA::getLoading)
       .def("get_current_fg", &CPCA::getCurrentFg)
