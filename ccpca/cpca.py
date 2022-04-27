@@ -48,6 +48,7 @@ class CPCA(cpca_cpp.CPCA):
     Notes
     -----
     """
+
     def __init__(self, n_components=2, standardize=True):
         super().__init__(n_components, standardize)
 
@@ -277,6 +278,47 @@ class CPCA(cpca_cpp.CPCA):
         """
         return super().get_component(index)
 
+    def get_eigenvalues(self):
+        """Returns current eigenvalues.
+
+        Parameters
+        ----------
+        None.
+        Returns
+        -------
+        eigenvalues: array-like, shape(, n_components)
+            Contrastive principal components' eigenvalues.
+        """
+        return super().get_eigenvalues()
+
+    def get_eigenvalue(self, index):
+        """Returns i-th eigenvalue.
+
+        Parameters
+        ----------
+        index: int
+            Indicates i-th eigenvalue.
+        Returns
+        -------
+        eigenvalue: float
+            i-th eigenvalue.
+        """
+        return super().get_eigenvalue(index)
+
+    def get_total_pos_eigenvalue(self):
+        """Returns the total of n_features positive eigenvalues (not n_components).
+        This value can be used to compute the explained ratio of variance of the matrix C.
+
+        Parameters
+        ----------
+        None
+        Returns
+        -------
+        total_pos_eigenvalue: float
+            The total of positive eigenvalues.
+        """
+        return super().get_total_pos_eigenvalue()
+
     def get_loadings(self):
         """Returns current principal component loadings.
 
@@ -285,7 +327,7 @@ class CPCA(cpca_cpp.CPCA):
         None.
         Returns
         -------
-        components: array-like, shape(n_features, n_components)
+        loadings: array-like, shape(n_features, n_components)
             Contrastive principal component loadings.
         """
         return super().get_loadings()
@@ -299,7 +341,7 @@ class CPCA(cpca_cpp.CPCA):
             Indicates i-th principal component loading.
         Returns
         -------
-        component: array-like, shape(1, n_components)
+        loading: array-like, shape(1, n_components)
             i-th principal component loading.
         """
         return super().get_loading(index)

@@ -85,9 +85,9 @@ void CPCA::fitWithManualAlpha(Eigen::MatrixXf const &fg,
 
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXf> es(fgCov_ - alpha * bgCov_);
   components_ = es.eigenvectors().rightCols(nComponents_).rowwise().reverse();
-  Eigen::RowVectorXf eigenvalues =
-      es.eigenvalues().real().tail(nComponents_).reverse();
-  loadings_ = components_.array().rowwise() * eigenvalues.array().abs().sqrt();
+  eigenvalues_ = es.eigenvalues().real().tail(nComponents_).reverse();
+  totalPosEigenvalue_ = (es.eigenvalues().real().array() < 0).select(0, es.eigenvalues().real()).sum();
+  loadings_ = components_.array().rowwise() * eigenvalues_.array().abs().sqrt();
 }
 
 void CPCA::fitWithBestAlpha(Eigen::MatrixXf const &fg,
@@ -108,9 +108,9 @@ void CPCA::updateComponents(float const alpha) {
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXf> es(fgCov_ - alpha * bgCov_);
   components_ = es.eigenvectors().rightCols(nComponents_).rowwise().reverse();
 
-  Eigen::RowVectorXf eigenvalues =
-      es.eigenvalues().real().tail(nComponents_).reverse();
-  loadings_ = components_.array().rowwise() * eigenvalues.array().abs().sqrt();
+  eigenvalues_ = es.eigenvalues().real().tail(nComponents_).reverse();
+  totalPosEigenvalue_ = (es.eigenvalues().real().array() < 0).select(0, es.eigenvalues().real()).sum();
+  loadings_ = components_.array().rowwise() * eigenvalues_.array().abs().sqrt();
 }
 
 Eigen::MatrixXf CPCA::transform(Eigen::MatrixXf const &X) {
@@ -272,22 +272,4 @@ Eigen::MatrixXf CPCA::createAffinityMatrix(Eigen::MatrixXf const &X,
       [](float v) { return std::isfinite(v) ? v : 0.0f; });
 
   return affinityMat;
-}
-
-Eigen::MatrixXf CPCA::getComponents() { return components_; }
-
-Eigen::VectorXf CPCA::getComponent(Eigen::Index const index) {
-  return components_.col(index);
-}
-
-Eigen::MatrixXf CPCA::getLoadings() { return loadings_; }
-
-Eigen::VectorXf CPCA::getLoading(Eigen::Index const index) {
-  return loadings_.col(index);
-}
-
-Eigen::MatrixXf CPCA::getCurrentFg() { return fg_; }
-
-Eigen::MatrixXf CPCA::getDiffCov(float const alpha) {
-  return fgCov_ - alpha * bgCov_;
 }

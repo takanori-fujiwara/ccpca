@@ -346,33 +346,6 @@ class CCPCA(ccpca_cpp.CCPCA):
         """
         return super().get_scaled_feat_contribs()
 
-    def get_loadings(self):
-        """Returns current principal component loadings.
-
-        Parameters
-        ----------
-        None.
-        Returns
-        -------
-        components: array-like, shape(n_features, n_components)
-            Contrastive principal component loadings.
-        """
-        return super().get_loadings()
-
-    def get_loading(self, index):
-        """Returns i-th principal component loading.
-
-        Parameters
-        ----------
-        index: int
-            Indicates i-th principal component loading.
-        Returns
-        -------
-        component: array-like, shape(1, n_components)
-            i-th principal component loading.
-        """
-        return super().get_loading(index)
-
     def get_components(self):
         """Returns current components.
 
@@ -411,6 +384,74 @@ class CCPCA(ccpca_cpp.CCPCA):
             The first principal component.
         """
         return super().get_feat_contribs()
+
+    def get_eigenvalues(self):
+        """Returns current eigenvalues.
+
+        Parameters
+        ----------
+        None.
+        Returns
+        -------
+        eigenvalues: array-like, shape(, n_components)
+            Contrastive principal components' eigenvalues.
+        """
+        return super().get_eigenvalues()
+
+    def get_eigenvalue(self, index):
+        """Returns i-th eigenvalue.
+
+        Parameters
+        ----------
+        index: int
+            Indicates i-th eigenvalue.
+        Returns
+        -------
+        eigenvalue: float
+            i-th eigenvalue.
+        """
+        return super().get_eigenvalue(index)
+
+    def get_total_pos_eigenvalue(self):
+        """Returns the total of n_features positive eigenvalues (not n_components).
+        This value can be used to compute the explained ratio of variance of the matrix C.
+
+        Parameters
+        ----------
+        None
+        Returns
+        -------
+        total_pos_eigenvalue: float
+            The total of positive eigenvalues.
+        """
+        return super().get_total_eigenvalue()
+
+    def get_loadings(self):
+        """Returns current principal component loadings.
+
+        Parameters
+        ----------
+        None.
+        Returns
+        -------
+        loadings: array-like, shape(n_features, n_components)
+            Contrastive principal component loadings.
+        """
+        return super().get_loadings()
+
+    def get_loading(self, index):
+        """Returns i-th principal component loading.
+
+        Parameters
+        ----------
+        index: int
+            Indicates i-th principal component loading.
+        Returns
+        -------
+        loading: array-like, shape(1, n_components)
+            i-th principal component loading.
+        """
+        return super().get_loading(index)
 
     def get_best_alpha(self):
         """Returns best alpha found with best_alpha()

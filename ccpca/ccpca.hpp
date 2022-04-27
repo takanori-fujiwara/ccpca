@@ -42,15 +42,20 @@ public:
     float absMax = featContribs_.array().abs().maxCoeff();
     return featContribs_ / absMax;
   };
-  Eigen::MatrixXf getLoadings() { return cpca_.getLoadings(); };
-  Eigen::VectorXf getLoading(Eigen::Index const index) {
-    return cpca_.getLoading(index);
-  };
   Eigen::MatrixXf getComponents() { return cpca_.getComponents(); };
   Eigen::VectorXf getComponent(Eigen::Index const index) {
     return cpca_.getComponent(index);
   };
   Eigen::VectorXf getFirstComponent() { return getComponent(0); };
+  Eigen::RowVectorXf getEigenvalues() { return cpca_.getEigenvalues(); };
+  float getEigenvalue(Eigen::Index const index) {
+    return cpca_.getEigenvalue(index);
+  };
+  float getTotalPosEigenvalue() { return cpca_.getTotalPosEigenvalue(); }
+  Eigen::MatrixXf getLoadings() { return cpca_.getLoadings(); };
+  Eigen::VectorXf getLoading(Eigen::Index const index) {
+    return cpca_.getLoading(index);
+  };
   float getBestAlpha() { return bestAlpha_; };
   std::vector<std::tuple<float, float, float, Eigen::VectorXf, Eigen::VectorXf,
                          Eigen::VectorXf>>

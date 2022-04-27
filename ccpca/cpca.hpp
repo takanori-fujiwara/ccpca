@@ -34,12 +34,23 @@ public:
                   bool const keepReports = false);
   std::vector<float> logspace(float const start, float const end,
                               unsigned int const num, float const base = 10.0f);
-  Eigen::MatrixXf getComponents();
-  Eigen::VectorXf getComponent(Eigen::Index const index);
-  Eigen::MatrixXf getLoadings();
-  Eigen::VectorXf getLoading(Eigen::Index const index);
-  Eigen::MatrixXf getCurrentFg();
-  Eigen::MatrixXf getDiffCov(float const alpha);
+  Eigen::MatrixXf getComponents() { return components_; }
+  Eigen::VectorXf getComponent(Eigen::Index const index) {
+    return components_.col(index);
+  }
+  Eigen::RowVectorXf getEigenvalues() { return eigenvalues_; }
+  float getEigenvalue(Eigen::Index const index) {
+    return eigenvalues_(index);
+  }
+  float getTotalPosEigenvalue() { return totalPosEigenvalue_; }
+  Eigen::MatrixXf getLoadings() { return loadings_; }
+  Eigen::VectorXf getLoading(Eigen::Index const index) {
+    return loadings_.col(index);
+  }
+  Eigen::MatrixXf getCurrentFg() { return fg_; }
+  Eigen::MatrixXf getDiffCov(float const alpha) {
+    return fgCov_ - alpha * bgCov_;
+  }
   float getBestAlpha() { return bestAlpha_; }
   std::vector<float> getReports() { return reports_; }
 
@@ -47,6 +58,8 @@ private:
   Eigen::Index nComponents_;
   bool standardize_;
   Eigen::MatrixXf components_;
+  Eigen::RowVectorXf eigenvalues_;
+  float totalPosEigenvalue_;
   Eigen::MatrixXf loadings_;
   Eigen::MatrixXf fg_;
   Eigen::MatrixXf bg_;
