@@ -1,5 +1,9 @@
 ## ccPCA: contrasting clusters in PCA - C++ Library and Python Module
 
+New
+-----
+Now, all Mac OS, Linux, Windows is supported (2022-04-27).
+
 About
 -----
 * ccPCA and feature contribution visualization from: ***Supporting Analysis of Dimensionality Reduction Results with Contrastive Learning***.
@@ -13,8 +17,8 @@ DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
   * Fast C++ implementation with Eigen3 of Contrastive PCA (cPCA) from [Abid and Zhang et al., 2018].<br />
     * A. Abid, M. J. Zhang, V. K. Bagaria, and J. Zou. Exploring patterns enriched in a dataset with contrastive principal component analysis, Nature Communicationsvolume,Vol. 9, No. 1, pp. 2134, 2018.
     * https://github.com/abidlabs/contrastive
-  * <span style="color:#ff8888">NEW!</span> Also, full automatic selection of contrastive parameter alpha from [Fujiwara et al., 2020].
-    * T. Fujiwara, J. Zhao, F. Chen, Y. Xu, and K.-L. Ma. Interpretable Contrastive Learning for Networks, 	arXiv:2005.12419, 2020.
+  * Also, full automatic selection of contrastive parameter alpha from [Fujiwara et al., 2022].
+    * T. Fujiwara, J. Zhao, F. Chen, Y. Xu, and K.-L. Ma. Interpretable Contrastive Learning for Networks, Journal of Data Science, Statistics, and Visualisation, 2022 (forthcoming, arXiv:2005.12419).
 
   * An extended version of cPCA (ccPCA) for contrasting clusters.
 
@@ -29,11 +33,11 @@ DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
 
 Requirements
 -----
-* macOS or Linux (Windows are not supported yet)
+* All major OSs are supported (macOS, Linux, Windows)
 
 * C++11 compiler, Python3, Eigen3, Pybind11, Numpy
 
-* Note: Tested on macOS Mojave and Ubuntu 20.0.4 LTS. Currently, usage in <span style="color:#8888ff">Google Colab is not supported</span>. (This is because when using ccpca via Python, ccpca needs to import shared libraries produced by Pybind11 ('cpca_cpp.so' and 'ccpca_cpp.so').  I will appreciate if somebody can help solve this problem.)
+* Note: Tested on macOS BigSur, Ubuntu 20.0.4 LTS, Windows 10. Currently, usage in <span style="color:#8888ff">Google Colab is not supported</span>. (This is because when using ccpca via Python, ccpca needs to import shared libraries produced by Pybind11 ('cpca_cpp.so' and 'ccpca_cpp.so').  I will appreciate if somebody can help solve this problem.)
 
 ******
 
@@ -101,6 +105,41 @@ Setup
 
     `pip3 install . `
 
+#### Windows (tested on Windows 10, <span style="color:#ff8888">requiring MSVC as a C++ compiler</span>)
+
+##### 1) Installation of ccPCA
+
+* Install required compiler and library
+
+    - Install MSVC (Microsoft C++): For example, you can download from https://visualstudio.microsoft.com/downloads/?q=build+tools
+      (note: other compilers are not supported, e.g., MinGW)
+
+    - Install Python3 (https://www.python.org/downloads/windows/)
+
+
+* Move to "ccpca/ccpca" directory
+
+* Install the modules with pip3 in "*Command Prompt for VS*". <span style="color:#ff8888">Note: if you installed 64-bit Python3, use *x64 Native Command Prompt for VS*</span>.
+
+    `pip3 install .`
+
+
+* You can test with sample.py
+
+    `pip3 install matplotlib sklearn`
+
+    `python sample.py`
+
+##### 2) Installation of fc-view
+
+* If you want to use the algorithms for scalable visualization of features' contributions, please follow the next steps.
+
+* Move to "ccpca/fc_view" directory
+
+* Install the modules with pip3
+
+    `pip3 install . `
+
 ******
 
 Usage
@@ -121,5 +160,5 @@ DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
 
 If you use cPCA with automatic selection of contrastive parameter alpha, please cite:
 Takanori Fujiwara, Jian Zhao, Francine Chen, Yaoliang Xu, and Kwan-Liu Ma,
-"Interpretable Contrastive Learning for Networks". 	arXiv:2005.12419, 2020.
+"Interpretable Contrastive Learning for Networks". 	Journal of Data Science, Statistics, and Visualisation, forthcoming (arXiv:2005.12419).
 https://arxiv.org/abs/2005.12419
