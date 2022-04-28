@@ -55,9 +55,10 @@ elif sys.platform.startswith('win'):
     import requests
     import zipfile
 
-    eigen_ver = 'eigen-3.4.0'
-    eigen_zip = f'{eigen_ver}.zip'
-    url = f'https://gitlab.com/libeigen/eigen/-/archive/3.4.0/{eigen_zip}'
+    eigen_ver = '3.4.0'
+    eigen_name = f'eigen-{eigen_ver}'
+    eigen_zip = f'{eigen_name}.zip'
+    url = f'https://gitlab.com/libeigen/eigen/-/archive/{eigen_ver}/{eigen_zip}'
     req = requests.get(url)
     with open(eigen_zip, 'wb') as of:
         of.write(req.content)
@@ -76,23 +77,25 @@ elif sys.platform.startswith('win'):
         for pybind_include in pybind_includes.split('-I')[1:]
     ]).replace(' "', '"')
 
-    pythonlib_path = os.path.dirname(sys.executable) + '\\libs\\python310.lib'
+    pyver = os.path.dirname(
+        sys.executable).split('\\')[-1].lower()  # => e.g., python310
+    pythonlib_path = os.path.dirname(sys.executable) + f'\\libs\\{pyver}.lib'
 
     # requires VS C++ compiler (https://aka.ms/vs/17/release/vs_BuildTools.exe)
     # also, use an appropriate command prompt for VS (e.g., x64 instead of x86 if using 62-bit Python3)
     print('building cpca')
-    os.system(f'cl /c /O2 /std:c11 /EHsc /I./{eigen_ver}/ cpca.cpp')
+    os.system(f'cl /c /O2 /std:c11 /EHsc /I./{eigen_name}/ cpca.cpp')
     os.system(
-        f'cl /c /O2 /std:c11 /EHsc /I./{eigen_ver}/ {pybind_includes} cpca_wrap.cpp'
+        f'cl /c /O2 /std:c11 /EHsc /I./{eigen_name}/ {pybind_includes} cpca_wrap.cpp'
     )
     os.system(
         f'link cpca.obj cpca_wrap.obj "{pythonlib_path}" /DLL /OUT:cpca_cpp{extension_suffix}'
     )
 
     print('building ccpca')
-    os.system(f'cl /c /O2 /std:c11 /EHsc /I./{eigen_ver}/ ccpca.cpp')
+    os.system(f'cl /c /O2 /std:c11 /EHsc /I./{eigen_name}/ ccpca.cpp')
     os.system(
-        f'cl /c /O2 /std:c11 /EHsc /I./{eigen_ver}/ {pybind_includes} ccpca_wrap.cpp'
+        f'cl /c /O2 /std:c11 /EHsc /I./{eigen_name}/ {pybind_includes} ccpca_wrap.cpp'
     )
     os.system(
         f'link cpca.obj cpca_wrap.obj ccpca.obj ccpca_wrap.obj "{pythonlib_path}" /DLL /OUT:ccpca_cpp{extension_suffix}'
@@ -108,7 +111,8 @@ elif sys.platform.startswith('win'):
     # link cpca.obj cpca_wrap.obj ccpca.obj ccpca_wrap.obj "C:\\Users\\Takanori Fujiwara\\AppData\\Local\\Programs\\Python\\Python310\\libs\\python310.lib" /DLL /OUT:ccpca_cpp.cp310-win_amd64.pyd
 else:
     print(
-        f'ccPCA only supports macos and linux. Your platform: {sys.platform}')
+        f'ccPCA only supports macos, linux, windows. Your platform: {sys.platform}'
+    )
 
 cpca_cpp_so = f'cpca_cpp{extension_suffix}'
 ccpca_cpp_so = f'ccpca_cpp{extension_suffix}'
