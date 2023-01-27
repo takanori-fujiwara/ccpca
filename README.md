@@ -2,7 +2,7 @@
 
 New
 -----
-Now, all Mac OS, Linux, Windows is supported (2022-04-27).
+Now, all Mac OS, Linux, Windows are supported (2022-04-27).
 
 About
 -----
@@ -46,6 +46,14 @@ Setup
 #### Mac OS with Homebrew
 
 ##### 1) Installation of ccPCA
+
+* Make sure if you have C++ compiler. For example,
+
+  `which c++`
+
+  should return the c++ compiler path (e.g., /usr/bin/c++) if it exists. If it does not exist, run:
+
+  `xcode-select --install`
 
 * Move to "ccpca/ccpca" directory
 

@@ -3,6 +3,16 @@ import sys
 import glob
 import sysconfig
 from distutils.core import setup
+from shutil import which
+
+
+def cpp_compiler_check(command_name='c++'):
+    err_msg = '''C++ compiler is not found and cannot install ccpca.
+Install C++ compiler. For example, for macOS: run "xcode-select --install" in terminal'''
+
+    if which(command_name) is None:
+        sys.exit(err_msg)
+
 
 extension_suffix = sysconfig.get_config_var('EXT_SUFFIX')
 
@@ -15,6 +25,8 @@ for removing_extension in ['so', 'exp', 'lib', 'obj', 'pyd', 'dll']:
             print("Error while deleting existing compiled files")
 
 if sys.platform.startswith('darwin'):
+    cpp_compiler_check()
+
     if os.system('which brew') > 0:
         print('installing homebrew')
         os.system(
@@ -37,6 +49,8 @@ if sys.platform.startswith('darwin'):
         f'c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -undefined dynamic_lookup -I/usr/local/include/eigen3/ $(python3 -m pybind11 --includes) cpca.cpp cpca_wrap.cpp ccpca.cpp ccpca_wrap.cpp -o ccpca_cpp{extension_suffix}'
     )
 elif sys.platform.startswith('linux'):
+    cpp_compiler_check()
+
     print('installing pybind11')
     os.system('pip3 install pybind11')
     print('building cPCA')
@@ -48,6 +62,8 @@ elif sys.platform.startswith('linux'):
         f'c++ -O3 -Wall -mtune=native -march=native -shared -std=c++11 -I/usr/include/eigen3/ -fPIC `python3 -m pybind11 --includes` cpca.cpp cpca_wrap.cpp ccpca.cpp ccpca_wrap.cpp -o ccpca_cpp{extension_suffix}'
     )
 elif sys.platform.startswith('win'):
+    cpp_compiler_check('cl')
+
     print('installing pybind11 requests')
     os.system('pip3 install pybind11 requests')
 
