@@ -8,7 +8,7 @@ About
 -----
 * ccPCA and feature contribution visualization from: ***Supporting Analysis of Dimensionality Reduction Results with Contrastive Learning***.
 Takanori Fujiwara, Oh-Hyun Kwon, and Kwan-Liu Ma.
-IEEE Transactions on Visualization and Computer Graphics and IEEE VIS 2019 (VAST).
+IEEE Transactions on Visualization and Computer Graphics and IEEE VIS 2020 (VAST 2019).
 DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
 
 * Demonstration of a system using ccPCA: http://kwonoh.net/ccpca/
@@ -18,7 +18,7 @@ DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
     * A. Abid, M. J. Zhang, V. K. Bagaria, and J. Zou. Exploring patterns enriched in a dataset with contrastive principal component analysis, Nature Communicationsvolume,Vol. 9, No. 1, pp. 2134, 2018.
     * https://github.com/abidlabs/contrastive
   * Also, full automatic selection of contrastive parameter alpha from [Fujiwara et al., 2022].
-    * T. Fujiwara, J. Zhao, F. Chen, Y. Xu, and K.-L. Ma. Interpretable Contrastive Learning for Networks, Journal of Data Science, Statistics, and Visualisation, 2022 (forthcoming, arXiv:2005.12419).
+    * T. Fujiwara, J. Zhao, F. Chen, Y. Xu, and K.-L. Ma. Network Comparison with Interpretable Contrastive Network Representation Learning, Journal of Data Science, Statistics, and Visualisation, 2022.
 
   * An extended version of cPCA (ccPCA) for contrasting clusters.
 
@@ -168,5 +168,5 @@ DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
 
 If you use cPCA with automatic selection of contrastive parameter alpha, please cite:
 Takanori Fujiwara, Jian Zhao, Francine Chen, Yaoliang Xu, and Kwan-Liu Ma,
-"Interpretable Contrastive Learning for Networks". 	Journal of Data Science, Statistics, and Visualisation, forthcoming (arXiv:2005.12419).
-https://arxiv.org/abs/2005.12419
+"Network Comparison with Interpretable Contrastive Network Representation Learning". 	Journal of Data Science, Statistics, and Visualisation, 2022.
+DOI: [10.52933/jdssv.v2i5.56](https://doi.org/10.52933/jdssv.v2i5.56)
