@@ -33,7 +33,9 @@ if sys.platform.startswith('darwin'):
             '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
         )
     print('installing python3, eigen, pybind11')
-    os.system('brew install pkg-config python3 eigen pybind11')
+    os.system('brew install pkg-config python3 eigen')
+    print('installing pybind11')
+    os.system('pip3 install pybind11')
     ## This part can be used to build with CMake (but for anaconda env, this doesn't work well)
     # print('processing cmake')
     # os.system('rm -f CMakeCache.txt')
