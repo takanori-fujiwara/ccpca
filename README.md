@@ -37,7 +37,7 @@ Requirements
 
 * C++11 compiler, Python3, Eigen3, Pybind11, Numpy
 
-* Note: Tested on macOS BigSur, Ubuntu 20.0.4 LTS, Windows 10. Currently, usage in <span style="color:#8888ff">Google Colab is not supported</span>. (This is because when using ccpca via Python, ccpca needs to import shared libraries produced by Pybind11 ('cpca_cpp.so' and 'ccpca_cpp.so').  I will appreciate if somebody can help solve this problem.)
+* Note: Tested on macOS Ventura, Ubuntu 22.0.4 LTS, Windows 10. Currently, usage in <span style="color:#8888ff">Google Colab is not supported</span>. (This is because when using ccpca via Python, ccpca needs to import shared libraries produced by Pybind11 ('cpca_cpp.so' and 'ccpca_cpp.so').  I will appreciate if somebody can help solve this problem.)
 
 ******
 
@@ -63,7 +63,7 @@ Setup
 
 * You can test with sample.py
 
-    `pip3 install matplotlib sklearn`
+    `pip3 install matplotlib scikit-learn`
 
     `python3 sample.py`
 
@@ -77,7 +77,7 @@ Setup
 
     `pip3 install . `
 
-#### Linux (tested on Ubuntu 20.0.4 LTS)
+#### Linux (tested on Ubuntu 22.0.4 LTS)
 
 ##### 1) Installation of ccPCA
 
@@ -99,7 +99,7 @@ Setup
 
 * You can test with sample.py
 
-    `pip3 install matplotlib sklearn`
+    `pip3 install matplotlib scikit-learn`
 
     `python3 sample.py`
 
@@ -134,7 +134,7 @@ Setup
 
 * You can test with sample.py
 
-    `pip3 install matplotlib sklearn`
+    `pip3 install matplotlib scikit-learn`
 
     `python sample.py`
 
