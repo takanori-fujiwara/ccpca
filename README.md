@@ -2,7 +2,8 @@
 
 New
 -----
-Now, all Mac OS, Linux, Windows are supported (2022-04-27).
+* Supported installation using virtual environments (due to the use of venv became a default from Python3.12) (2024-04-14).
+* Now, all Mac OS, Linux, Windows are supported (2022-04-27).
 
 About
 -----
@@ -37,7 +38,7 @@ Requirements
 
 * C++11 compiler, Python3, Eigen3, Pybind11, Numpy
 
-* Note: Tested on macOS Ventura, Ubuntu 22.0.4 LTS, Windows 10. Currently, usage in <span style="color:#8888ff">Google Colab is not supported</span>. (This is because when using ccpca via Python, ccpca needs to import shared libraries produced by Pybind11 ('cpca_cpp.so' and 'ccpca_cpp.so').  I will appreciate if somebody can help solve this problem.)
+* Note: Tested on macOS Sonoma, Ubuntu 22.0.4 LTS, Windows 10. Currently, usage in <span style="color:#8888ff">Google Colab is not supported</span>. (This is because when using ccpca via Python, ccpca needs to import shared libraries produced by Pybind11 ('cpca_cpp.so' and 'ccpca_cpp.so').  I will appreciate if somebody can help solve this problem.)
 
 ******
 
@@ -57,7 +58,15 @@ Setup
 
 * Move to "ccpca/ccpca" directory
 
-* Install the modules with pip3 (this installs homebrew, pkg-config, python3, eigen, pybind11, numpy).
+* Run presetup.py
+
+    `python3 presetup.py`
+
+    - Note (2024-04-14): For installation using virtualenv, proccesses listed in "presetup.py" are separated from "setup.py". This is due to venv's bug (module involved commands do not work correctly when using pip3 under venv).
+    - This python script generates C++ shared library of inc-pca also installs homebrew, pkg-config, python3, eigen, pybind11 if they do not exist.
+
+
+* Install the modules with pip3 (this installs numpy if it does not exist).
 
     `pip3 install .`
 
@@ -93,6 +102,8 @@ Setup
 
 * Install the modules with pip3.
 
+    `python3 presetup.py`
+
     `pip3 install .`
 
     * Note: If installation does not work, check setup.py and replace c++ commands based on your environment.
@@ -110,7 +121,7 @@ Setup
 * Move to "ccpca/fc_view" directory
 
 * Install the modules with pip3
-
+    
     `pip3 install . `
 
 #### Windows (tested on Windows 10, <span style="color:#ff8888">requiring MSVC as a C++ compiler</span>)
@@ -129,6 +140,8 @@ Setup
 
 * Install the modules with pip3 in "*Command Prompt for VS*". <span style="color:#ff8888">Note: if you installed 64-bit Python3, use *x64 Native Command Prompt for VS*</span>.
 
+    `python3 presetup.py`
+    
     `pip3 install .`
 
 
