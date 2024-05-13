@@ -185,6 +185,11 @@ class CCPCA(ccpca_cpp.CCPCA):
         else:
             auto_alpha_selection = False
 
+        if np.any( np.isnan(K) ):
+            raise ArithmeticError('the target cluster data must not contain any NA.')
+        if np.any( np.isnan(R) ):
+            raise ArithmeticError('the data must not contain any NA.')
+
         super().fit(K, R, auto_alpha_selection, alpha, var_thres_ratio,
                     parallel, n_alphas, max_log_alpha, keep_reports)
 
@@ -314,6 +319,10 @@ class CCPCA(ccpca_cpp.CCPCA):
         best_alpha: float
             The found best alpha.
         """
+        if np.any( np.isnan(K) ):
+            raise ArithmeticError('the target cluster data must not contain any NA.')
+        if np.any( np.isnan(R) ):
+            raise ArithmeticError('the data must not contain any NA.')
         return super().best_alpha(K, R, var_thres_ratio, parallel, n_alphas,
                                   max_log_alpha, keep_reports)
 
