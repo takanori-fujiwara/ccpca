@@ -1,7 +1,5 @@
-import os
-import sys
-import glob
 import sysconfig
+import sys
 from distutils.core import setup
 from shutil import which
 
