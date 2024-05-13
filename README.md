@@ -140,7 +140,7 @@ Setup
 
 * Install the modules with pip3 in "*Command Prompt for VS*". <span style="color:#ff8888">Note: if you installed 64-bit Python3, use *x64 Native Command Prompt for VS*</span>.
 
-    `python3 presetup.py`
+    `python presetup.py`
     
     `pip3 install .`
 
