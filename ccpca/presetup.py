@@ -94,9 +94,9 @@ elif sys.platform.startswith("win"):
         [f'/I"{pybind_include}"' for pybind_include in pybind_includes.split("-I")[1:]]
     ).replace(' "', '"')
 
-    pyver = (
-        os.path.dirname(sys.executable).split("\\")[-1].lower()
-    )  # => e.g., python310
+    pyver = f"python{sys.version_info.major}{sys.version_info.minor}"
+    # => e.g., python310
+
     pythonlib_path = os.path.dirname(sys.executable) + f"\\libs\\{pyver}.lib"
 
     # requires VS C++ compiler (https://aka.ms/vs/17/release/vs_BuildTools.exe)
