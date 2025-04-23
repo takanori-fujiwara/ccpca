@@ -39,9 +39,7 @@ public:
     return components_.col(index);
   }
   Eigen::RowVectorXf getEigenvalues() { return eigenvalues_; }
-  float getEigenvalue(Eigen::Index const index) {
-    return eigenvalues_(index);
-  }
+  float getEigenvalue(Eigen::Index const index) { return eigenvalues_(index); }
   float getTotalPosEigenvalue() { return totalPosEigenvalue_; }
   Eigen::MatrixXf getLoadings() { return loadings_; }
   Eigen::VectorXf getLoading(Eigen::Index const index) {

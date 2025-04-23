@@ -86,7 +86,9 @@ void CPCA::fitWithManualAlpha(Eigen::MatrixXf const &fg,
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXf> es(fgCov_ - alpha * bgCov_);
   components_ = es.eigenvectors().rightCols(nComponents_).rowwise().reverse();
   eigenvalues_ = es.eigenvalues().real().tail(nComponents_).reverse();
-  totalPosEigenvalue_ = (es.eigenvalues().real().array() < 0).select(0, es.eigenvalues().real()).sum();
+  totalPosEigenvalue_ = (es.eigenvalues().real().array() < 0)
+                            .select(0, es.eigenvalues().real())
+                            .sum();
   loadings_ = components_.array().rowwise() * eigenvalues_.array().abs().sqrt();
 }
 
@@ -109,7 +111,9 @@ void CPCA::updateComponents(float const alpha) {
   components_ = es.eigenvectors().rightCols(nComponents_).rowwise().reverse();
 
   eigenvalues_ = es.eigenvalues().real().tail(nComponents_).reverse();
-  totalPosEigenvalue_ = (es.eigenvalues().real().array() < 0).select(0, es.eigenvalues().real()).sum();
+  totalPosEigenvalue_ = (es.eigenvalues().real().array() < 0)
+                            .select(0, es.eigenvalues().real())
+                            .sum();
   loadings_ = components_.array().rowwise() * eigenvalues_.array().abs().sqrt();
 }
 
@@ -126,7 +130,7 @@ float CPCA::bestAlpha(Eigen::MatrixXf const &fg, Eigen::MatrixXf const &bg,
                       bool const keepReports) {
   reports_.clear();
   float alpha = initAlpha;
-  fit(fg, bg, alpha);
+  fit(fg, bg, false, alpha);
 
   // method 1. discard minor eigenvectors to avoid singular
   // Eigen::SelfAdjointEigenSolver<Eigen::MatrixXf> esQ(bgCov_);

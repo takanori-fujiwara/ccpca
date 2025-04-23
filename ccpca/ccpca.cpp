@@ -54,14 +54,14 @@ void CCPCA::fitWithManualAlpha(Eigen::MatrixXf const &K,
   Eigen::Index nSamplesR = R.rows();
 
   if (K.cols() != R.cols()) {
-    std::cerr << "# of rows of K and all matrix in R must be the same."
+    std::cerr << "# of cols of K and all matrix in R must be the same."
               << std::endl;
   }
 
   Eigen::MatrixXf concatMat_(nSamplesK + nSamplesR, K.cols());
   concatMat_ << K, R;
 
-  cpca_.fit(concatMat_, R, alpha);
+  cpca_.fit(concatMat_, R, false, alpha);
   featContribs_ = cpca_.getLoading(0);
 }
 
@@ -77,29 +77,27 @@ float CCPCA::bestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
   Eigen::Index nSamplesR = R.rows();
 
   if (K.cols() != R.cols()) {
-    std::cerr << "# of rows of K and all matrix in R must be the same."
+    std::cerr << "# of cols of K and all matrix in R must be the same."
               << std::endl;
   }
 
   Eigen::MatrixXf concatMat_(nSamplesK + nSamplesR, K.cols());
   concatMat_ << K, R;
 
-  cpca_.fit(concatMat_, R, 0.0f);
+  cpca_.fit(concatMat_, R, false, 0.0f);
 
-  Eigen::VectorXf bestProjK = cpca_.transform(K).col(0);
-  Eigen::VectorXf bestProjR = cpca_.transform(R).col(0);
+  Eigen::VectorXf projK = cpca_.transform(K).col(0);
+  Eigen::VectorXf projR = cpca_.transform(R).col(0);
 
   bestAlpha_ = 0.0f;
-  auto baseVarK = scaledVar(bestProjK, bestProjR).first;
-  auto bestDiscrepancy =
-      1.0f / std::max(float(histIntersect(bestProjK, bestProjR)),
-                      std::numeric_limits<float>::min());
+  auto baseVarK = scaledVar(projK, projR).first;
+  auto bestDiscrepancy = 1.0f / std::max(float(histIntersect(projK, projR)),
+                                         std::numeric_limits<float>::min());
 
   reports_.clear();
   if (keepReports) {
     reports_.push_back(std::make_tuple(0.0, float(bestDiscrepancy), baseVarK,
-                                       bestProjK, bestProjR,
-                                       cpca_.getLoading(0)));
+                                       projK, projR, cpca_.getLoading(0)));
     if (parallel) {
       parallel = false;
       std::cout << "current version keepReports only support non-parallel "
@@ -115,13 +113,12 @@ float CCPCA::bestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
     for (auto const &alpha : alphas) {
       cpca_.updateComponents(alpha);
 
-      Eigen::VectorXf tmpProjK = cpca_.transform(K).col(0);
-      Eigen::VectorXf tmpProjR = cpca_.transform(R).col(0);
+      Eigen::VectorXf projK = cpca_.transform(K).col(0);
+      Eigen::VectorXf projR = cpca_.transform(R).col(0);
 
-      auto varK = scaledVar(tmpProjK, tmpProjR).first;
-      auto discrepancy =
-          1.0f / std::max(float(histIntersect(tmpProjK, tmpProjR)),
-                          std::numeric_limits<float>::min());
+      auto varK = scaledVar(projK, projR).first;
+      auto discrepancy = 1.0f / std::max(float(histIntersect(projK, projR)),
+                                         std::numeric_limits<float>::min());
 
       if (varK >= baseVarK * varThresRatio && discrepancy > bestDiscrepancy) {
         bestDiscrepancy = discrepancy;
@@ -130,8 +127,7 @@ float CCPCA::bestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
 
       if (keepReports) {
         reports_.push_back(std::make_tuple(alpha, float(bestDiscrepancy), varK,
-                                           tmpProjK, tmpProjR,
-                                           cpca_.getLoading(0)));
+                                           projK, projR, cpca_.getLoading(0)));
       }
     }
   } else {
@@ -169,12 +165,12 @@ float CCPCA::bestAlpha(Eigen::MatrixXf const &K, Eigen::MatrixXf const &R,
                 mtx.unlock();
               }
 
-              Eigen::VectorXf tmpProjK = K * component;
-              Eigen::VectorXf tmpProjR = R * component;
+              Eigen::VectorXf projK = K * component;
+              Eigen::VectorXf projR = R * component;
 
-              auto varK = scaledVar(tmpProjK, tmpProjR).first;
+              auto varK = scaledVar(projK, projR).first;
               auto discrepancy =
-                  1.0f / std::max(float(histIntersect(tmpProjK, tmpProjR)),
+                  1.0f / std::max(float(histIntersect(projK, projR)),
                                   std::numeric_limits<float>::min());
               mtx.lock();
               varAndDiscpSet[j] = {varK, discrepancy};
