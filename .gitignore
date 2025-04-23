@@ -12,6 +12,9 @@ build*
 meeting/
 .ipynb_checkpoints/
 .vscode
+.editorconfig
+ccpca/cpp_bind_version/
+ccpca/performance_test.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

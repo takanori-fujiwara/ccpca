@@ -2,6 +2,8 @@
 
 New
 -----
+* Python implementation of cPCA, ccPCA is completely changed to only use python for easiler implementation (2025-04-23).
+    - Compared with previous C++ binded version, this version has much faster when data size is large (but slightly slower for small data). Also, Python version supports any float precisions.
 * Supported installation using virtual environments (due to the use of venv became a default from Python3.12) (2024-04-14).
 * Now, all Mac OS, Linux, Windows are supported (2022-04-27).
 
@@ -15,7 +17,7 @@ DOI: [10.1109/TVCG.2019.2934251](https://doi.org/10.1109/TVCG.2019.2934251)
 * Demonstration of a system using ccPCA: http://kwonoh.net/ccpca/
 
 * Features
-  * Fast C++ implementation with Eigen3 of Contrastive PCA (cPCA) from [Abid and Zhang et al., 2018].<br />
+  * Fast C++ and Python implementations of Contrastive PCA (cPCA) from [Abid and Zhang et al., 2018].<br />
     * A. Abid, M. J. Zhang, V. K. Bagaria, and J. Zou. Exploring patterns enriched in a dataset with contrastive principal component analysis, Nature Communicationsvolume,Vol. 9, No. 1, pp. 2134, 2018.
     * https://github.com/abidlabs/contrastive
   * Also, full automatic selection of contrastive parameter alpha from [Fujiwara et al., 2022].
@@ -36,37 +38,19 @@ Requirements
 -----
 * All major OSs are supported (macOS, Linux, Windows)
 
-* C++11 compiler, Python3, Eigen3, Pybind11, Numpy
+* Python3 (latest)
 
-* Note: Tested on macOS Sequoia, Ubuntu 22.0.4 LTS, Windows 10. Currently, usage in <span style="color:#8888ff">Google Colab is not supported</span>. (This is because when using ccpca via Python, ccpca needs to import shared libraries produced by Pybind11 ('cpca_cpp.so' and 'ccpca_cpp.so').  I will appreciate if somebody can help solve this problem.)
+* Note: Tested on macOS Sequoia. Planning to test wih Ubuntu and Windows.
 
 ******
 
-Setup
+Setup (Python implementation)
 -----
-#### Mac OS with Homebrew
-
 ##### 1) Installation of ccPCA
-
-* Make sure if you have C++ compiler. For example,
-
-  `which c++`
-
-  should return the c++ compiler path (e.g., /usr/bin/c++) if it exists. If it does not exist, run:
-
-  `xcode-select --install`
 
 * Move to "ccpca/ccpca" directory
 
-* Run presetup.py
-
-    `python3 presetup.py`
-
-    - Note (2024-04-14): For installation using virtualenv, proccesses listed in "presetup.py" are separated from "setup.py". This is due to venv's bug (module involved commands do not work correctly when using pip3 under venv).
-    - This python script generates C++ shared library of inc-pca also installs homebrew, pkg-config, python3, eigen, pybind11 if they do not exist.
-
-
-* Install the modules with pip3 (this installs numpy if it does not exist).
+* Install the modules with pip3 (this installs numpy and scipy if it does not exist).
 
     `pip3 install .`
 
@@ -75,81 +59,6 @@ Setup
     `pip3 install matplotlib scikit-learn`
 
     `python3 sample.py`
-
-##### 2) Installation of fc-view
-
-* If you want to use the algorithms for scalable visualization of features' contributions, please follow the next steps.
-
-* Move to "ccpca/fc_view" directory
-
-* Install the modules with pip3
-
-    `pip3 install . `
-
-#### Linux (tested on Ubuntu 22.0.4 LTS)
-
-##### 1) Installation of ccPCA
-
-* Install libraries
-
-    `sudo apt update`
-
-    `sudo apt install libeigen3-dev python3-pip python3-dev`
-
-    * Note: Replace apt commands based on your Linux OS.
-
-* Move to "ccpca/ccpca" directory
-
-* Install the modules with pip3.
-
-    `python3 presetup.py`
-
-    `pip3 install .`
-
-    * Note: If installation does not work, check setup.py and replace c++ commands based on your environment.
-
-* You can test with sample.py
-
-    `pip3 install matplotlib scikit-learn`
-
-    `python3 sample.py`
-
-##### 2) Installation of fc-view
-
-* If you want to use the algorithms for scalable visualization of features' contributions, please follow the next steps.
-
-* Move to "ccpca/fc_view" directory
-
-* Install the modules with pip3
-    
-    `pip3 install . `
-
-#### Windows (tested on Windows 10, <span style="color:#ff8888">requiring MSVC as a C++ compiler</span>)
-
-##### 1) Installation of ccPCA
-
-* Install required compiler and library
-
-    - Install MSVC (Microsoft C++): For example, you can download from https://visualstudio.microsoft.com/downloads/?q=build+tools
-      (note: other compilers are not supported, e.g., MinGW)
-
-    - Install Python3 (https://www.python.org/downloads/windows/)
-
-
-* Move to "ccpca/ccpca" directory
-
-* Install the modules with pip3 in "*Command Prompt for VS*". <span style="color:#ff8888">Note: if you installed 64-bit Python3, use *x64 Native Command Prompt for VS*</span>.
-
-    `python presetup.py`
-    
-    `pip3 install .`
-
-
-* You can test with sample.py
-
-    `pip3 install matplotlib scikit-learn`
-
-    `python sample.py`
 
 ##### 2) Installation of fc-view
 
@@ -166,7 +75,7 @@ Setup
 Usage
 -----
 * With Python3
-    * Import installed modules from python (e.g., `from ccpca import CCPCA`). See sample.ipynb for examples.
+    * Import installed modules from python (e.g., `from ccpca import CCPCA`). See ccpca/sample.py and sample.ipynb for examples.
 
 * With C++
     * Include header files (e.g., ccpca.hpp) in C++ code with cpp files (e.g., ccpca.cpp).
