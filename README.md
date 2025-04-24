@@ -46,9 +46,6 @@ Requirements
 
 Setup (Python implementation)
 -----
-##### 1) Installation of ccPCA
-
-* Move to "ccpca/ccpca" directory
 
 * Install the modules with pip3 (this installs numpy and scipy if it does not exist).
 
@@ -60,22 +57,17 @@ Setup (Python implementation)
 
     `python3 sample.py`
 
-##### 2) Installation of fc-view
-
-* If you want to use the algorithms for scalable visualization of features' contributions, please follow the next steps.
-
-* Move to "ccpca/fc_view" directory
-
-* Install the modules with pip3
-
-    `pip3 install . `
-
 ******
 
 Usage
 -----
 * With Python3
-    * Import installed modules from python (e.g., `from ccpca import CCPCA`). See ccpca/sample.py and sample.ipynb for examples.
+    * Import installed modules from python, for example: 
+        - `from cpca import CPCA`
+        - `from ccpca import CCPCA`
+        - `from fc_view import OptSignFlip, MatReorder`
+    * See ccpca/sample.py and sample.ipynb for examples.
+    * Also, there are detailed documentations in cpca/cpca.py, ccpca/ccpca.py, fc_view/mat_reorder.py, and fc_view/opt_sign_flip.py
 
 * With C++
     * Include header files (e.g., ccpca.hpp) in C++ code with cpp files (e.g., ccpca.cpp).
