@@ -47,7 +47,11 @@ Requirements
 Setup (Python implementation)
 -----
 
-* Install the modules with pip3 (this installs numpy and scipy if it does not exist).
+* Install via PyPI:
+
+  `pip3 install ccpca`
+
+  Or, manual installation: download this repository, move to the downloaded repository, and then:
 
     `pip3 install .`
 
