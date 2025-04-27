@@ -247,7 +247,7 @@ class CPCA:
         if self.components_ is None:
             print("Run fit() before get_component()")
             return
-        return self.components_[index]
+        return self.components_[:, index]
 
     def get_eigenvalues(self):
         """Returns current eigenvalues.
@@ -321,7 +321,7 @@ class CPCA:
         if self.loadings_ is None:
             print("Run fit() before get_loading()")
             return
-        return self.loadings_[index]
+        return self.loadings_[:, index]
 
     def get_reports(self):
         """Returns the reports kept while automatic selection of alpha. To get

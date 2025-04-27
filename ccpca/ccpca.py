@@ -343,7 +343,7 @@ class CCPCA:
         if self.components_ is None:
             print("Run fit() before get_component()")
             return
-        return self.components_[index]
+        return self.components_[:, index]
 
     def get_first_component(self):
         """Returns the firsrt PC from current cPCA result.
@@ -358,7 +358,7 @@ class CCPCA:
         if self.components_ is None:
             print("Run fit() before get_first_component()")
             return
-        return self.components_[0]
+        return self.components_[:, 0]
 
     def get_eigenvalues(self):
         """Returns current eigenvalues.
@@ -432,7 +432,7 @@ class CCPCA:
         if self.loadings_ is None:
             print("Run fit() before get_loading()")
             return
-        return self.loadings_[index]
+        return self.loadings_[:, index]
 
     def get_best_alpha(self):
         """Returns best alpha found with fit() with auto_selection_alpha=True
