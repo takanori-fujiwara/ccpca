@@ -580,8 +580,8 @@ class CCPCA:
                         # More locks but fewer steps
                         with lock:
                             alpha = alphas[j]
-                            self.cpca_.update_components(alpha)
-                            component = self.cpca_.get_component(0)
+                            self._cpca.update_components(alpha)
+                            component = self._cpca.get_component(0)
 
                     proj_A = A @ component
                     proj_K = proj_A[: K.shape[0]]
