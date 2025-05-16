@@ -40,7 +40,7 @@ Requirements
 
 * Python3 (latest)
 
-* Note: Tested on macOS Sequoia. Planning to test wih Ubuntu and Windows.
+* Note: Tested on macOS Sequoia, Ubuntu 24.0.4 LTS, Google Colab, and Windows 11. 
 
 ******
 
@@ -60,6 +60,8 @@ Setup (Python implementation)
     `pip3 install matplotlib scikit-learn`
 
     `python3 sample.py`
+
+    Note: when using Linux, you may need to install PyQt: e.g., `pip3 install PyQt6`
 
 ******
 

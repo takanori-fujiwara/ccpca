@@ -1,7 +1,5 @@
 import os
-
-from concurrent.futures import ThreadPoolExecutor
-from threading import Lock
+import multiprocess as mp
 
 import numpy as np
 from scipy.linalg import eigh
@@ -151,8 +149,7 @@ class CCPCA:
             Ratio threshold of variance of K to keep (the parameter gamma in
             our paper).
         parallel: bool, optional, (default=True)
-            If True, multithread implemented in C++ will be used for
-            calculation.
+            If True, multiprocessing will be used for calculation.
         n_alphas: int, optional, (default=40)
             A number of alphas to check to find the best one.
         max_log_alpha: float, optional, (default=3.0)
@@ -249,8 +246,7 @@ class CCPCA:
             Ratio threshold of variance of K to keep (the parameter gamma in
             our paper).
         parallel: bool, optional, (default=True)
-            If True, multithread implemented in C++ will be used for
-            calculation.
+            If True, multiprocessing will be used for calculation.
         n_alphas: int, optional, (default=40)
             A number of alphas to check to find the best one.
         max_log_alpha: float, optional, (default=3.0)
@@ -535,7 +531,7 @@ class CCPCA:
                     )
                 )
                 var_K, _ = _scaled_var(proj_K, proj_R)
-                # print(discrepancy, best_discrepancy)
+
                 if (var_K >= base_var_K * var_thres_ratio) and (
                     discrepancy > best_discrepancy
                 ):
@@ -555,51 +551,33 @@ class CCPCA:
                     )
         else:
             n_workers = np.max((os.cpu_count(), 1))
-            n = len(alphas)
-            lock = Lock()
-
             A = self._cpca._fg.copy()
             Cov_A = self._cpca._C_fg.copy()
             Cov_R = self._cpca._C_bg.copy()
 
-            def worker_task(worker_id):
-                r0 = n // n_workers * worker_id + min(n % n_workers, worker_id)
-                r1 = n // n_workers * (worker_id + 1) + min(
-                    n % n_workers, worker_id + 1
+            def worker_task(alpha):
+                # Less locks but fewer steps
+                diff_cov = Cov_A - alpha * Cov_R
+                _, eigenvectors = eigh(diff_cov)
+                component = eigenvectors[:, -1]
+                # # More locks but fewer steps
+                # self._cpca.update_components(alpha)
+                # component = self._cpca.get_component(0)
+
+                proj_A = A @ component
+                proj_K = proj_A[: K.shape[0]]
+                proj_R = proj_A[K.shape[0] :]
+                var_K, _ = _scaled_var(proj_K, proj_R)
+                discrepancy = 1.0 / np.max(
+                    (_hist_intersect(proj_K, proj_R), np.finfo(proj_K.dtype).tiny)
                 )
 
-                for j in range(r0, r1):
-                    if n_workers > 4:
-                        # Less locks but more steps
-                        with lock:
-                            alpha = alphas[j]
-                            diff_cov = Cov_A - alpha * Cov_R
-                        _, eigenvectors = eigh(diff_cov)
-                        component = eigenvectors[:, -1]
-                    else:
-                        # More locks but fewer steps
-                        with lock:
-                            alpha = alphas[j]
-                            self._cpca.update_components(alpha)
-                            component = self._cpca.get_component(0)
+                return var_K, discrepancy
 
-                    proj_A = A @ component
-                    proj_K = proj_A[: K.shape[0]]
-                    proj_R = proj_A[K.shape[0] :]
-                    var_K, _ = _scaled_var(proj_K, proj_R)
-                    discrepancy = 1.0 / np.max(
-                        (
-                            _hist_intersect(proj_K, proj_R),
-                            np.finfo(proj_K.dtype).tiny,
-                        )
-                    )
+            with mp.Pool(processes=n_workers) as pool:
+                results = pool.map(worker_task, alphas)
 
-                    return alpha, var_K, discrepancy
-
-            with ThreadPoolExecutor(max_workers=n_workers) as executor:
-                results = executor.map(worker_task, range(n_workers))
-
-            for alpha, var, discrepancy in results:
+            for alpha, (var, discrepancy) in zip(alphas, results):
                 if (var >= base_var_K * var_thres_ratio) and (
                     discrepancy > best_discrepancy
                 ):
