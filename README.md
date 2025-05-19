@@ -40,7 +40,7 @@ Requirements
 
 * Python3 (latest)
 
-* Note: Tested on macOS Sequoia, Ubuntu 24.0.4 LTS, Google Colab, and Windows 11. 
+* Note: Tested on macOS Sequoia, Ubuntu 24.04 LTS, Google Colab, and Windows 10. 
 
 ******
 
