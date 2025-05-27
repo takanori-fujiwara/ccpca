@@ -121,9 +121,9 @@ class CCPCA:
         auto_alpha_selection=True,
         alpha=None,
         var_thres_ratio=0.5,
-        parallel=True,
+        parallel=False,
         n_alphas=40,
-        max_log_alpha=3.0,
+        max_log_alpha=1.0,
         keep_reports=False,
     ):
         """If using auto alpha selection, find the best contrast parameter alpha
@@ -148,16 +148,16 @@ class CCPCA:
         var_thres_ratio: float, optional, (default=0.5)
             Ratio threshold of variance of K to keep (the parameter gamma in
             our paper).
-        parallel: bool, optional, (default=True)
-            If True, multiprocessing will be used for calculation.
+        parallel: bool, optional, (default=False)
+            If True, multiprocessing will be used for calculation (advanced use).
+            Python implementation after Version 0.2.2 relies on Pathos for multiprocessing.
+            But, Pathos sometimes produces an error, and for now, we set this parameter False by default.
         n_alphas: int, optional, (default=40)
             A number of alphas to check to find the best one.
-        max_log_alpha: float, optional, (default=3.0)
+        max_log_alpha: float, optional, (default=1.0)
             10.0 ** max_log_alpha is the maximum value of alpha will be used.
-            Even though this default parameter (i.e., 3.0) follows the original
-            cPCA by [Abid and Zhang et al., 2018], you may want to set a much
-            smaller value based on the dataset (e.g., 0.5 or 1.0 works well
-            from our experience).
+            Although the original cPCA by [Abid and Zhang et al., 2018] set 3.0
+            by default, we decided to set 1.0 by default after Version 0.2.4 based on our experience.
         keep_reports: bool, optional, (default=False)
             If True, while automatic alpha selection, reports are recorded. The
             reports include "alpha", "discrepancy score", "variance score",
@@ -216,9 +216,9 @@ class CCPCA:
         auto_alpha_selection=True,
         alpha=None,
         var_thres_ratio=0.5,
-        parallel=True,
+        parallel=False,
         n_alphas=40,
-        max_log_alpha=3.0,
+        max_log_alpha=1.0,
         keep_reports=False,
     ):
         """Applying fit first and then return transformed matrix of E (i.e.,
@@ -245,16 +245,16 @@ class CCPCA:
         var_thres_ratio: float, optional, (default=0.5)
             Ratio threshold of variance of K to keep (the parameter gamma in
             our paper).
-        parallel: bool, optional, (default=True)
-            If True, multiprocessing will be used for calculation.
+        parallel: bool, optional, (default=False)
+            If True, multiprocessing will be used for calculation (advanced use).
+            Python implementation after Version 0.2.2 relies on Pathos for multiprocessing.
+            But, Pathos sometimes produces an error, and for now, we set this parameter False by default.
         n_alphas: int, optional, (default=40)
             A number of alphas to check to find the best one.
-        max_log_alpha: float, optional, (default=3.0)
+        max_log_alpha: float, optional, (default=1.0)
             10.0 ** max_log_alpha is the maximum value of alpha will be used.
-            Even though this default parameter (i.e., 3.0) follows the original
-            cPCA by [Abid and Zhang et al., 2018], you may want to set a much
-            smaller value based on the dataset (e.g., 0.5 or 1.0 works well
-            from our experience).
+            Although the original cPCA by [Abid and Zhang et al., 2018] set 3.0
+            by default, we decided to set 1.0 by default after Version 0.2.4 based on our experience.
         keep_reports: bool, optional, (default=False)
             If True, while automatic alpha selection, reports are recorded. The
             reports include "alpha", "discrepancy score", "variance score",
@@ -473,9 +473,9 @@ class CCPCA:
         K,
         R,
         var_thres_ratio=0.5,
-        parallel=True,
+        parallel=False,
         n_alphas=40,
-        max_log_alpha=3.0,
+        max_log_alpha=1.0,
         keep_reports=False,
     ):
         """Finds the best contrast parameter alpha which has high discrepancy
