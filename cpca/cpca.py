@@ -374,8 +374,8 @@ class CPCA:
         if self._fg.shape[1] != self._bg.shape[1]:
             print("# of features of foregraound and background must be the same.")
 
-        self._fg -= np.mean(self._fg, axis=0)
-        self._bg -= np.mean(self._bg, axis=0)
+        self._fg = self._fg - np.mean(self._fg, axis=0)
+        self._bg = self._bg - np.mean(self._bg, axis=0)
 
         if self.standardize:
             self._fg /= np.std(self._fg, axis=0)
@@ -410,7 +410,7 @@ class CPCA:
 
         # method 2: add small constant to diag of bgCov_ to avoid singular
         # (Note: refer to cpca.cpp to know what is method 1)
-        self._C_bg += np.eye(self._C_bg.shape[0]) * eta
+        self._C_bg = self._C_bg + np.eye(self._C_bg.shape[0]) * eta
 
         if keep_reports:
             self.reports_.append(alpha)
